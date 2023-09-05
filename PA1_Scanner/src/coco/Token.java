@@ -109,6 +109,9 @@ public class Token {
         // OPTIONAL: convenience function - boolean matches (String lexeme)
         //           to report whether a Token.Kind has the given lexeme
         //           may be useful
+        public boolean matchLexeme (String lexeme) {
+            return ( hasStaticLexeme() && defaultLexeme.equals(lexeme) );
+        }
     }
 
     private int lineNum;
@@ -135,10 +138,36 @@ public class Token {
     }
 
     public Token (String lexeme, int lineNum, int charPos) {
-        this.lineNum = lineNum;
-        this.charPos = charPos;
+        this(lineNum, charPos);
+        if (lexeme == null) {
+            return;
+        }
+        this.lexeme = lexeme;
 
         // TODO: based on the given lexeme determine and set the actual kind
+        for (Kind kind : Kind.values()) {
+            if (kind.matchLexeme(lexeme)) {
+                this.kind = kind;
+                return;
+            }
+        }
+        State myState = State.Q0;
+        for (char c : lexeme.toCharArray()) {
+            myState = automaton(myState, c);
+        }
+        switch (myState) {
+            case Q1:
+                this.kind = Kind.IDENT;
+                return;
+            case Q3:
+                this.kind = Kind.INT_VAL;
+                return;
+            case Q5:
+                this.kind = Kind.FLOAT_VAL;
+                return;
+            default:
+                break;
+        }
 
         // if we don't match anything, signal error
         this.kind = Kind.ERROR;
@@ -155,18 +184,83 @@ public class Token {
 
     public String lexeme () {
         // TODO: implement
-        return null;
+        return lexeme;
     }
 
     public Kind kind () {
         // TODO: implement
-        return null;
+        return kind;
     }
 
     // TODO: function to query a token about its kind - boolean is (Token.Kind kind)
+    public boolean isKind (Kind kind) {
+        return (this.kind == kind);
+    }
 
     // OPTIONAL: add any additional helper or convenience methods
     //           that you find make for a cleaner design
+
+    private enum State {
+        Q0, // initial
+        Q1, // identifier, accepting
+        Q2, // negative
+        Q3, // integer val, accepting
+        Q4, // decimal point
+        Q5, // float val, accepting
+        Q6, // invalid
+    }
+
+    private State automaton (State currentState, char input) {
+        switch (currentState) {
+            case Q0:
+                if ((input >= 'a' && input <= 'z') || (input >= 'A' && input <= 'Z')) {
+                    return State.Q1;
+                } else if (input == '-') {
+                    return State.Q2;
+                } else if (input >= '0' && input <= '9') {
+                    return State.Q3;
+                } else {
+                    return State.Q6;
+                }
+            case Q1:
+                if ((input >= 'a' && input <= 'z') ||
+                    (input >= 'A' && input <= 'Z') || 
+                    (input >= '0' && input <= '9') ||
+                    (input == '_') ) {
+                    return State.Q1;
+                } else {
+                    return State.Q6;
+                }
+            case Q2:
+                if (input >= '0' && input <= '9') {
+                    return State.Q3;
+                } else {
+                    return State.Q6;
+                }
+            case Q3:
+                if (input >= '0' && input <= '9') {
+                    return State.Q3;
+                } else if (input == '.') {
+                    return State.Q4;
+                } else {
+                    return State.Q6;
+                }
+            case Q4:
+                if (input >= '0' && input <= '9') {
+                    return State.Q5;
+                } else {
+                    return State.Q6;
+                }
+            case Q5:
+                if (input >= '0' && input <= '9') {
+                    return State.Q5;
+                } else {
+                    return State.Q6;
+                }
+            default:
+                return State.Q6;
+        }
+    }
 
     @Override
     public String toString () {
