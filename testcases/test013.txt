@@ -1,0 +1,20 @@
+// Charlotte Harrington 330004230
+
+// this test case handles extended comment functionality 
+
+// nested comments
+
+/*
+// this should work
+*/
+
+/*/* this should work */*/
+
+// incorrect comment formatting below:
+
+/ / 
+/ * * / //these should register separately and not as comment tokens
+
+// handle mismatched block comment endings - these should be problematic
+
+*/ */

@@ -1,0 +1,62 @@
+//Timothy Reynolds 824004266
+//This test is meant to check that the
+//keywords, whitespace between a keyword,
+//identifiers with underscores, identifiers
+//with numbers work all work as expected
+//and that a bunch of symbols we don't have
+//to parse don't work, and that numbers can't
+//have a letter in the middle 
+
+//keywords test
+void
+bool
+int
+float
+true
+false
+and
+or
+if
+not
+then
+else
+fi
+while
+do
+od
+repeat
+until
+call
+return
+main
+function
+
+//keywords don't work with whitespace between them
+vo id
+bo	ol
+flo
+at
+
+//identifiers with underscores should work
+have_a_really_great_day !=
+
+//identifiers with numbers should work
+today0909 = y3st3rd4y;
+
+//numbers can't have a letter in the middle
+0xB33F 
+
+//Errors
+!
+"
+'
+\
+?
+&
+|
+~
+`
+@
+#
+$
+_

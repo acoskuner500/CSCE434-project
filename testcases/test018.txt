@@ -1,0 +1,11 @@
+//Aurko Routh 231006888
+
+//test nested parenthesis as well as unary minus/subtract and also keyword within identifier
+int integer = ((4-4))
+
+//make sure multiple concatenated keywords is marked as identifier
+voidboolintfloat
+
+// make sure identifer can't start with digit but can contain digit after first character
+int var1 = 5;
+int 1var = 5;

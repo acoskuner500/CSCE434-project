@@ -1,0 +1,7 @@
+// Jaiden Kimmelman 328000077
+
+// Testing subtracting a negative
+int testSubtractingNegative = 5 - -7;
+
+// Testing handling of assignment operators
+-==-^^==

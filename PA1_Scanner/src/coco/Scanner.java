@@ -22,7 +22,7 @@ public class Scanner implements Iterator<Token> {
         // TODO: initialize scanner
         input = new BufferedReader(reader);
         closed = false;
-        lineNum = charPos = 0;
+        lineNum = charPos = 1;
         scan = "";
     }
 
@@ -50,7 +50,7 @@ public class Scanner implements Iterator<Token> {
         }
         if (result == '\n') {
             lineNum++;
-            charPos = 0;
+            charPos = 1;
         } else if (result == -1) {
             // do nothing
         } else {
@@ -66,15 +66,6 @@ public class Scanner implements Iterator<Token> {
     @Override
     public boolean hasNext () {
         // TODO: implement
-        // if (nextChar == -1) {
-            // try {
-            //     input.close();
-                // closed = true;
-            // } catch (IOException ioe) {
-            //     Error("IOException occurred while closing reader", ioe);
-            // }
-        // }
-        // return (!closed /* && !Character.isWhitespace(nextChar) */);
         return !closed;
     }
 
@@ -91,7 +82,8 @@ public class Scanner implements Iterator<Token> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        if (closed && (nextChar == -1)) {
+        // close reader and return EOF
+        if (/* hasNext() && */ (nextChar == -1)) {
             try {
                 input.close();
                 closed = true;
@@ -104,61 +96,74 @@ public class Scanner implements Iterator<Token> {
         // TODO: implement
         // boolean matchOnce = false;
         int startLN = lineNum, startCP = charPos;
-        int endCP = 0;
         Token t = new Token(null, startLN, startCP);
         scan = "";
+        String errLexeme = "";
+        // State currentState = State.Q0;
         // Token t = null;
         while (hasNext()) {
-            scan += (nextChar = readChar());
+            nextChar = readChar();
             // skip comments
             if (nextChar == '/') {
-                // skip over line comment
+                errLexeme = "/";
                 nextChar = readChar();
+                // skip over line comment
                 if (nextChar == '/') {
                     while (nextChar != '\n' && nextChar != -1) {
                         nextChar = readChar();
                     }
-                    if (nextChar == -1) {
-                        closed = true;
+                    // EOL or EOF reached
+                    // return any token that came before comment
+                    if (scan != "") {
+                        return new Token(scan, startLN, startCP);
                     }
-                    // if (matchOnce) {
-                    //     return t;
-                    // }
                 }
                 // skip over block/inline comment
                 else if (nextChar == '*') {
-                    while (nextChar != '*' || nextChar != -1) {
+                    errLexeme += (char) nextChar;
+                    while (nextChar != -1) {
                         nextChar = readChar();
-                    }
-                    if (nextChar == '*') {
-                        if (nextChar == '/') {
-                            break;
+                        errLexeme += (char) nextChar;
+                        if (nextChar == '*') {
+                            nextChar = readChar();
+                            if (nextChar == '/' || nextChar == -1) {
+                                break;
+                            }
+                            errLexeme += (char) nextChar;
                         }
                     }
+                    if (nextChar == -1) {
+                        return new Token(scan + errLexeme, startLN, startCP);
+                    }
                 } else if (Character.isWhitespace(nextChar)) {
-                    // return new Token()
+                    return new Token(scan + errLexeme, startLN, startCP);
+                } else {
+                    errLexeme += (char) nextChar;
+                }
+            } else if (nextChar == -1) {
+                if ((scan + errLexeme) != "") {
+                    // System.out.print(scan + errLexeme);
+                    return new Token(scan + errLexeme, startLN, startCP);
                 }
             } else if (Character.isWhitespace(nextChar)) {
-
+                continue;
+            } else {
+                scan += (char) nextChar;
             }
-            scan += nextChar;
-            t = new Token(scan, startLN, startCP);
-            if (!t.kind.matchLexeme("")) {
-                // not a special case token
-                endCP = startCP + scan.length();
-            }
-            // matchOnce = !(matchOnce || (t.kind != Token.Kind.ERROR)); // toggle true for first match
         }
-        if (nextChar == -1) {
-            t = Token.EOF(startLN, startCP);
-            closed = true;
-        } else {
-            nextChar = readChar();
-        }
-        return t;
+        // should never reach this
+        return null;
     }
 
     // OPTIONAL: add any additional helper or convenience methods
     //           that you find make for a cleaner design
     //           (useful for handling special case Tokens)
+    
+    private void newMark() {
+        try {
+                input.mark(32);
+            } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
 }

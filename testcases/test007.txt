@@ -1,0 +1,21 @@
+// Chris Baldwin 525003366
+// Tests array params and variable declarations
+
+function sum (int[] a) : int {/**/};
+
+function sum2 (int[] a, int[] b) : int {/**/};
+{
+    int[10] values;
+    int[20] new_values;
+
+    // Fill values
+    int sum_values;
+    int sum_both;
+
+    sum_values = call sum(values);
+    sum_both = call sum2(values, new_values);
+
+    call printInt(sum_values);
+    call printInt(sum_both);
+    call println();
+}.

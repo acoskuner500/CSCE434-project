@@ -1,0 +1,5 @@
+// Farabi Mahmud 327008950
+// Test to check + sign before integer number integerLit = ["-"] digit { digit }
+
+main 
+int positiveINT = +5;

@@ -1,0 +1,30 @@
+// Caleb Norton 628007801
+/* test idents that have keywords as substrings */
+
+/* tests following keywords: int, void, if, else, while, return */
+
+int_47
+palintous
+gaulint
+
+void_star
+palvoidous
+gaulvoid
+
+iffy
+palifous
+gaulif
+
+elsest
+palelous
+gauelse
+
+whileist
+palwhileous
+gaulwhile
+
+returnist
+palreturnous
+gaulreturn
+
+

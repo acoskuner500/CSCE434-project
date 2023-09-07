@@ -1,0 +1,26 @@
+// Josh Stafford 330003056
+// Tests scanning program that is poorly formatted, but still correct
+
+main int x,y,z; function add(int num1,int num2):int{
+  return num1+   num2;
+      };{
+x = 4;
+         y 
+  =               7;z=-3;
+y = call add            (x,y)  ;
+          call 
+  printInt
+  (
+    x); call println(   )        
+          ;
+call printInt(y);call 
+println(); call printInt(z)
+
+  ;
+
+
+  call println
+  
+  ();}
+  
+  .

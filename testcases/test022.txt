@@ -1,0 +1,8 @@
+// Gaultier Delbarre 830006271
+// Test That nested parentheses are parsed correctly
+
+main {
+  int a = (( 32 * 4 ) / 8 ) ^ (1.0 / 2.0);
+
+  return 0;
+}

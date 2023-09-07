@@ -1,0 +1,9 @@
+// Samuel Torres 130006243
+
+//Checks capitaization of keywords
+
+Main Else iF cAll
+
+//Check Identifier for illegal character
+
+Sam% Charlott3+ s\/\/4o$

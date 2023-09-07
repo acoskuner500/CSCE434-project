@@ -1,0 +1,12 @@
+// Nhi Vu 230005282
+// tests variable declarations and control flow using an if-else statement
+
+var username: string;
+var age: int = 25;
+
+if age < 18 {
+var message: string = "You are underage.";
+} else {
+var message: string = "You are an adult.";
+}.
+

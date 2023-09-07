@@ -1,0 +1,35 @@
+﻿// Anthony Pierson
+// with this test case I tried to cover most of the possibilities of the language
+
+
+// This is a comment
+function foo(int x, float y) : void {
+    int z = x + y;
+    if (z > 10) then
+        return;
+    fi;
+    while (not (z == 0)) do
+        z -= 1;
+        call bar(z);
+    od;
+}
+
+
+function bar(int n) : int {
+    int f = 1;
+    repeat
+        f *= n;
+        n --;
+    until (n <= 1);
+    return f;
+}
+
+
+main {
+    int x = 3;
+    float y = 4.5;
+    call foo(x, y);
+    bool b = true or false;
+    int[] arr = [10];
+    arr[0] = b;
+}.

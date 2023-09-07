@@ -1,0 +1,21 @@
+// Eyobel Berhane
+
+// This test case checks for key word spelling, comments, incorrect punctuation and keyword variable names
+
+// Test main function
+main
+
+// Test int declaration with incorrect spelling of a keyword
+int whiel = 12;
+
+// Test function creation of type int
+function tester (int w) : int {
+    // Test return and for incorrect syntax
+    return w.
+}
+
+// Test function use
+int wheel = tester(whiel);
+
+// Test variable with name also being keyword
+int for = 5;

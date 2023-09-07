@@ -1,0 +1,17 @@
+// Lydia Harding 430007014
+// test014.txt will test the separation of operators as well as some comment notation and correctness of identifier tokens.
+
+// Separation of operators
+
+int _weird = 5 + (5-2);
+bool _b00lean = (5<=2)AND((5+8)>=9);
+bool fine = true;
+int incor$rect = 200;
+int 1ncorrect_2 = 5;
+int an_extremely_long_identifier_name_which_would_not_ordinarily_be_this_long_in_practice = 0;
+++=-===/==>=<<=**//-=*=(THIS IS A COMMENT NOW)-=% 
+
+// Now getting in to some weird comment formatting
+int // for if else $ 
+int my_int = 52 - 4//8//
+This isn't a comment
