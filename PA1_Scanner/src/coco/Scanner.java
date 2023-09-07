@@ -16,13 +16,15 @@ public class Scanner implements Iterator<Token> {
 
     private String scan;    // current lexeme being scanned in
     private int nextChar;   // contains the next char (-1 == EOF)
+    boolean marked = false;
+    boolean error = false;
 
     // reader will be a FileReader over the source file
     public Scanner (Reader reader) {
         // TODO: initialize scanner
         input = new BufferedReader(reader);
         closed = false;
-        lineNum = charPos = 1;
+        lineNum = charPos = 0;
         scan = "";
     }
 
@@ -45,12 +47,26 @@ public class Scanner implements Iterator<Token> {
         int result = 0;
         try {
             result = input.read();
+            // if (Character.isWhitespace(result)) {
+            //     // System.out.print((int) result + " ");
+            // }
+            // String x;
+            // switch (result) {
+            //     case 9: x = "\\t";
+            //     case 10: x = "\\n";
+            //     case 11: x = "\\v";
+            //     case 12: x = "\\f";
+            //     case 13: x = "\\r";
+            //     case 32: x = " ";
+            //     default: x = "" + (char) result;
+            // }
+            // // System.out.print(x);
         } catch (IOException ioe) {
             Error("IOException occurred while reading char", ioe);
         }
         if (result == '\n') {
             lineNum++;
-            charPos = 1;
+            charPos = 0;
         } else if (result == -1) {
             // do nothing
         } else {
@@ -82,76 +98,121 @@ public class Scanner implements Iterator<Token> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        // close reader and return EOF
-        if (/* hasNext() && */ (nextChar == -1)) {
-            try {
-                input.close();
-                closed = true;
-                return Token.EOF(lineNum, charPos);
-            } catch (IOException ioe) {
-                Error("IOException occurred while closing reader", ioe);
-            }
-        }
 
         // TODO: implement
-        // boolean matchOnce = false;
         int startLN = lineNum, startCP = charPos;
-        Token t = new Token(null, startLN, startCP);
+        Token.State state = Token.State.Q0;
+        Token.State commentState;
+        boolean isComment = false;
         scan = "";
-        String errLexeme = "";
-        // State currentState = State.Q0;
-        // Token t = null;
+        String commentBuf = "";
         while (hasNext()) {
+            // close reader and return EOF
+            if (nextChar == -1) {
+                try {
+                    input.close();
+                    closed = true;
+                    return Token.EOF(lineNum, charPos);
+                } catch (IOException ioe) {
+                    Error("IOException occurred while closing reader", ioe);
+                }
+            }
+            
             nextChar = readChar();
-            // skip comments
+            // System.out.print(nextChar + " ");
+            commentState = state;
+            state = Token.automaton(state, (char) nextChar);
+            // System.out.print(state + " ");
             if (nextChar == '/') {
-                errLexeme = "/";
+                commentBuf += (char) nextChar;
                 nextChar = readChar();
-                // skip over line comment
                 if (nextChar == '/') {
+                    commentBuf += (char) nextChar;
+                    isComment = true;
                     while (nextChar != '\n' && nextChar != -1) {
                         nextChar = readChar();
+                        commentBuf += (char) nextChar;
                     }
-                    // EOL or EOF reached
-                    // return any token that came before comment
-                    if (scan != "") {
-                        return new Token(scan, startLN, startCP);
-                    }
-                }
-                // skip over block/inline comment
-                else if (nextChar == '*') {
-                    errLexeme += (char) nextChar;
+                } else if (nextChar == '*') {
+                    isComment = true;
+                    commentBuf += (char) nextChar;
                     while (nextChar != -1) {
                         nextChar = readChar();
-                        errLexeme += (char) nextChar;
+                        commentBuf += (char) nextChar;
                         if (nextChar == '*') {
                             nextChar = readChar();
-                            if (nextChar == '/' || nextChar == -1) {
-                                break;
+                            switch (nextChar) {
+                                case '/': commentBuf += (char) nextChar;
+                                case -1: break;
+                                default: 
+                                    commentBuf += (char) nextChar;
+                                    continue;
                             }
-                            errLexeme += (char) nextChar;
+                            // if (nextChar == '/' || nextChar == -1) {
+                            //     break;
+                            // }
+                            // commentBuf += (char) nextChar;
                         }
                     }
                     if (nextChar == -1) {
-                        return new Token(scan + errLexeme, startLN, startCP);
+                        if (marked) {
+                            try {
+                                input.reset();
+                                // System.out.println("scan 145: " + scan);
+                                return new Token(scan, startLN, startCP);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // System.out.println("scan and comment: " + scan + commentBuf);
+                            return new Token(scan + commentBuf, startLN, startCP);
+                        }
                     }
-                } else if (Character.isWhitespace(nextChar)) {
-                    return new Token(scan + errLexeme, startLN, startCP);
-                } else {
-                    errLexeme += (char) nextChar;
                 }
-            } else if (nextChar == -1) {
-                if ((scan + errLexeme) != "") {
-                    // System.out.print(scan + errLexeme);
-                    return new Token(scan + errLexeme, startLN, startCP);
-                }
-            } else if (Character.isWhitespace(nextChar)) {
-                continue;
-            } else {
-                scan += (char) nextChar;
             }
+            if (Token.invalidState(state) ) {
+                if (marked) {
+                    try {
+                        input.reset();
+                        marked = false;
+                        // System.out.println("scan 177: " + scan);
+                        return new Token(scan, startLN, startCP);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (nextChar == -1) {
+                        // System.out.println("scan 184: " + scan);
+                        return new Token(scan, startLN, startCP);
+                    } else if (Character.isWhitespace(nextChar)) {
+                        if (scan != "") {
+                            return new Token(scan, startLN, startCP);
+                        }
+                        state = Token.State.Q0;
+                    } else if (isComment) {
+                        isComment = false;
+                        state = commentState;
+                    } else {
+                        scanIn(state, nextChar);
+                    }
+                }
+            } else if (isComment) {
+                scan = "";
+                commentBuf = "";
+                state = Token.State.Q0;
+                isComment = false;
+            } else {
+                scanIn(state, nextChar);
+            }
+
+            // for (char c : scan.toCharArray()) {
+            //     System.out.print((int) c + " ");
+            // }
+            // if (scan == "") System.out.print("empty string");
+            // System.out.println();
         }
         // should never reach this
+        // System.out.println("scan 189: " + scan);
         return null;
     }
 
@@ -159,11 +220,16 @@ public class Scanner implements Iterator<Token> {
     //           that you find make for a cleaner design
     //           (useful for handling special case Tokens)
     
-    private void newMark() {
-        try {
-                input.mark(32);
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void scanIn(Token.State state, int nChar) {
+        scan += (char) nChar;
+        if (Token.isAcceptingState(state)) {
+            try {
+                    input.mark(2048);
+                    marked = true;
+                    // System.out.print(marked + " ");
+                } catch (IOException e) {
+                    e.printStackTrace();
+            }
         }
     }
 }

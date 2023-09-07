@@ -109,9 +109,6 @@ public class Token {
         // OPTIONAL: convenience function - boolean matches (String lexeme)
         //           to report whether a Token.Kind has the given lexeme
         //           may be useful
-        public boolean matchLexeme (String lexeme) {
-            return ( hasStaticLexeme() && defaultLexeme.equals(lexeme) );
-        }
     }
 
     private int lineNum;
@@ -145,14 +142,17 @@ public class Token {
         // TODO: based on the given lexeme determine and set the actual kind
         currentState = State.Q0;
         for (char c : lexeme.toCharArray()) {
-            automaton(c);
+            currentState = automaton(currentState, c);
         }
-        this.kind = acceptingState();
-        if (currentState != State.Q115) return;
+        this.kind = acceptingState(currentState);
+        if (!invalidState(currentState)) {
+            return;
+        }
 
         // if we don't match anything, signal error
         this.kind = Kind.ERROR;
         this.lexeme = "Unrecognized lexeme: " + lexeme;
+        System.out.print(this.lexeme + "\t");
     }
 
     public int lineNumber () {
@@ -180,10 +180,17 @@ public class Token {
 
     // OPTIONAL: add any additional helper or convenience methods
     //           that you find make for a cleaner design
+    public static boolean invalidState(State state) {
+        return (state == State.Q115);
+    }
+
+    public static boolean isAcceptingState (State state) {
+        return (acceptingState(state) != Kind.ERROR);
+    }
 
     // Function to return Kind based on accepting states
-    private Kind acceptingState() {
-        switch (currentState) {
+    private static Kind acceptingState(State state) {
+        switch (state) {
             case Q3:    return Kind.AND;
             case Q7:    return Kind.BOOL;
             case Q11:   return Kind.CALL;
@@ -245,7 +252,7 @@ public class Token {
     }
 
     // All states (accepting, intermediate, and invalid)
-    private enum State {
+    public enum State {
         Q0,
         Q1,
         Q2,
@@ -365,203 +372,229 @@ public class Token {
     }
 
     // Function to execute state transitions
-    private void automaton (char input) {
+    public static State automaton (State state, char input) {
         switch (input) {
             case 'a':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q1;
-                    case Q8:	currentState = State.Q9;
-                    case Q18:	currentState = State.Q19;
-                    case Q25:	currentState = State.Q26;
-                    case Q39:	currentState = State.Q40;
-                    case Q52:	currentState = State.Q53;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q1;
+                    case Q8:	return State.Q9;
+                    case Q18:	return State.Q19;
+                    case Q25:	return State.Q26;
+                    case Q39:	return State.Q40;
+                    case Q52:	return State.Q53;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'b':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q4;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q4;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'c':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q8;
-                    case Q29:	currentState = State.Q30;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q8;
+                    case Q29:	return State.Q30;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'd':
-                switch (currentState) {
-                    case Q2:	currentState = State.Q3;
-                    case Q0:	currentState = State.Q12;
-                    case Q46:	currentState = State.Q47;
-                    case Q73:	currentState = State.Q74;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q2:	return State.Q3;
+                    case Q0:	return State.Q12;
+                    case Q46:	return State.Q47;
+                    case Q73:	return State.Q74;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'e':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q14;
-                    case Q16:	currentState = State.Q17;
-                    case Q21:	currentState = State.Q22;
-                    case Q49:	currentState = State.Q50;
-                    case Q51:	currentState = State.Q52;
-                    case Q60:	currentState = State.Q61;
-                    case Q64:	currentState = State.Q65;
-                    case Q78:	currentState = State.Q79;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q14;
+                    case Q16:	return State.Q17;
+                    case Q21:	return State.Q22;
+                    case Q49:	return State.Q50;
+                    case Q51:	return State.Q52;
+                    case Q60:	return State.Q61;
+                    case Q64:	return State.Q65;
+                    case Q78:	return State.Q79;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'f':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q18;
-                    case Q35:	currentState = State.Q36;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q18;
+                    case Q35:	return State.Q36;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'g':
-                switch (currentState) {
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'h':
-                switch (currentState) {
-                    case Q59:	currentState = State.Q60;
-                    case Q75:	currentState = State.Q76;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q59:	return State.Q60;
+                    case Q75:	return State.Q76;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'i':
-                switch (currentState) {
-                    case Q18:	currentState = State.Q23;
-                    case Q31:	currentState = State.Q32;
-                    case Q0:	currentState = State.Q35;
-                    case Q40:	currentState = State.Q41;
-                    case Q68:	currentState = State.Q69;
-                    case Q72:	currentState = State.Q73;
-                    case Q76:	currentState = State.Q77;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q18:	return State.Q23;
+                    case Q31:	return State.Q32;
+                    case Q0:	return State.Q35;
+                    case Q40:	return State.Q41;
+                    case Q68:	return State.Q69;
+                    case Q72:	return State.Q73;
+                    case Q76:	return State.Q77;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'j':
             case 'k':
-                switch (currentState) {
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'l':
-                switch (currentState) {
-                    case Q6:	currentState = State.Q7;
-                    case Q9:	currentState = State.Q10;
-                    case Q10:	currentState = State.Q11;
-                    case Q14:	currentState = State.Q15;
-                    case Q18:	currentState = State.Q24;
-                    case Q19:	currentState = State.Q20;
-                    case Q69:	currentState = State.Q70;
-                    case Q77:	currentState = State.Q78;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q6:	return State.Q7;
+                    case Q9:	return State.Q10;
+                    case Q10:	return State.Q11;
+                    case Q14:	return State.Q15;
+                    case Q18:	return State.Q24;
+                    case Q19:	return State.Q20;
+                    case Q69:	return State.Q70;
+                    case Q77:	return State.Q78;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'm':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q39;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q39;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'n':
-                switch (currentState) {
-                    case Q1:	currentState = State.Q2;
-                    case Q28:	currentState = State.Q29;
-                    case Q33:	currentState = State.Q34;
-                    case Q35:	currentState = State.Q37;
-                    case Q41:	currentState = State.Q42;
-                    case Q0:	currentState = State.Q43;
-                    case Q57:	currentState = State.Q58;
-                    case Q61:	currentState = State.Q62;
-                    case Q66:	currentState = State.Q67;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q1:	return State.Q2;
+                    case Q28:	return State.Q29;
+                    case Q33:	return State.Q34;
+                    case Q35:	return State.Q37;
+                    case Q41:	return State.Q42;
+                    case Q0:	return State.Q43;
+                    case Q57:	return State.Q58;
+                    case Q61:	return State.Q62;
+                    case Q66:	return State.Q67;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'o':
-                switch (currentState) {
-                    case Q4:	currentState = State.Q5;
-                    case Q5:	currentState = State.Q6;
-                    case Q12:	currentState = State.Q13;
-                    case Q24:	currentState = State.Q25;
-                    case Q32:	currentState = State.Q33;
-                    case Q43:	currentState = State.Q44;
-                    case Q0:	currentState = State.Q46;
-                    case Q71:	currentState = State.Q72;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q4:	return State.Q5;
+                    case Q5:	return State.Q6;
+                    case Q12:	return State.Q13;
+                    case Q24:	return State.Q25;
+                    case Q32:	return State.Q33;
+                    case Q43:	return State.Q44;
+                    case Q0:	return State.Q46;
+                    case Q71:	return State.Q72;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'p':
-                switch (currentState) {
-                    case Q50:	currentState = State.Q51;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q50:	return State.Q51;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'q':
-                switch (currentState) {
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'r':
-                switch (currentState) {
-                    case Q46:	currentState = State.Q48;
-                    case Q0:	currentState = State.Q49;
-                    case Q56:	currentState = State.Q57;
-                    case Q59:	currentState = State.Q63;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q46:	return State.Q48;
+                    case Q0:	return State.Q49;
+                    case Q56:	return State.Q57;
+                    case Q59:	return State.Q63;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 's':
-                switch (currentState) {
-                    case Q20:	currentState = State.Q21;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q20:	return State.Q21;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 't':
-                switch (currentState) {
-                    case Q26:	currentState = State.Q27;
-                    case Q30:	currentState = State.Q31;
-                    case Q37:	currentState = State.Q38;
-                    case Q44:	currentState = State.Q45;
-                    case Q53:	currentState = State.Q54;
-                    case Q50:	currentState = State.Q55;
-                    case Q0:	currentState = State.Q59;
-                    case Q67:	currentState = State.Q68;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q26:	return State.Q27;
+                    case Q30:	return State.Q31;
+                    case Q37:	return State.Q38;
+                    case Q44:	return State.Q45;
+                    case Q53:	return State.Q54;
+                    case Q50:	return State.Q55;
+                    case Q0:	return State.Q59;
+                    case Q67:	return State.Q68;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'u':
-                switch (currentState) {
-                    case Q18:	currentState = State.Q28;
-                    case Q55:	currentState = State.Q56;
-                    case Q63:	currentState = State.Q64;
-                    case Q0:	currentState = State.Q66;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q18:	return State.Q28;
+                    case Q55:	return State.Q56;
+                    case Q63:	return State.Q64;
+                    case Q0:	return State.Q66;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'v':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q71;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q71;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'w':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q75;
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+                switch (state) {
+                    case Q0:	return State.Q75;
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case 'x':
             case 'y':
             case 'z':
-                switch (currentState) {
-                    case Q115:	currentState = State.Q115;
-                    default:	currentState = State.Q80;
+            case 'A':
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'E':
+            case 'F':
+            case 'G':
+            case 'H':
+            case 'I':
+            case 'J':
+            case 'K':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'O':
+            case 'P':
+            case 'Q':
+            case 'R':
+            case 'S':
+            case 'T':
+            case 'U':
+            case 'V':
+            case 'W':
+            case 'X':
+            case 'Y':
+            case 'Z':
+                switch (state) {
+                    case Q80:	return State.Q80;
+                    default:	return State.Q115;
                 }
             case '0':
             case '1':
@@ -573,128 +606,128 @@ public class Token {
             case '7':
             case '8':
             case '9':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q113;
-                    case Q113:	currentState = State.Q113;
-                    case Q91:	currentState = State.Q113;
-                    case Q106:	currentState = State.Q114;
-                    case Q114:	currentState = State.Q114;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q113;
+                    case Q113:	return State.Q113;
+                    case Q91:	return State.Q113;
+                    case Q106:	return State.Q114;
+                    case Q114:	return State.Q114;
+                    default:	return State.Q115;
                 }
             case '^':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q81;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q81;
+                    default:	return State.Q115;
                 }
             case '*':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q83;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q83;
+                    default:	return State.Q115;
                 }
             case '/':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q85;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q85;
+                    default:	return State.Q115;
                 }
             case '%':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q87;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q87;
+                    default:	return State.Q115;
                 }
             case '+':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q89;
-                    case Q89:	currentState = State.Q101;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q89;
+                    case Q89:	return State.Q101;
+                    default:	return State.Q115;
                 }
             case '-':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q91;
-                    case Q91:	currentState = State.Q102;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q91;
+                    case Q91:	return State.Q102;
+                    default:	return State.Q115;
                 }
             case '=':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q93;
-                    case Q81:	currentState = State.Q82;
-                    case Q83:	currentState = State.Q84;
-                    case Q85:	currentState = State.Q86;
-                    case Q87:	currentState = State.Q88;
-                    case Q89:	currentState = State.Q90;
-                    case Q91:	currentState = State.Q92;
-                    case Q93:	currentState = State.Q94;
-                    case Q95:	currentState = State.Q96;
-                    case Q97:	currentState = State.Q98;
-                    case Q99:	currentState = State.Q100;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q93;
+                    case Q81:	return State.Q82;
+                    case Q83:	return State.Q84;
+                    case Q85:	return State.Q86;
+                    case Q87:	return State.Q88;
+                    case Q89:	return State.Q90;
+                    case Q91:	return State.Q92;
+                    case Q93:	return State.Q94;
+                    case Q95:	return State.Q96;
+                    case Q97:	return State.Q98;
+                    case Q99:	return State.Q100;
+                    default:	return State.Q115;
                 }
             case '!':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q95;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q95;
+                    default:	return State.Q115;
                 }
             case '<':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q97;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q97;
+                    default:	return State.Q115;
                 }
             case '>':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q99;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q99;
+                    default:	return State.Q115;
                 }
             case '(':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q107;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q107;
+                    default:	return State.Q115;
                 }
             case ')':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q108;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q108;
+                    default:	return State.Q115;
                 }
             case '{':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q109;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q109;
+                    default:	return State.Q115;
                 }
             case '}':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q110;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q110;
+                    default:	return State.Q115;
                 }
             case '[':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q111;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q111;
+                    default:	return State.Q115;
                 }
             case ']':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q112;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q112;
+                    default:	return State.Q115;
                 }
             case ',':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q103;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q103;
+                    default:	return State.Q115;
                 }
             case ':':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q104;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q104;
+                    default:	return State.Q115;
                 }
             case ';':
-                switch (currentState) {
-                    case Q0:	currentState = State.Q105;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q0:	return State.Q105;
+                    default:	return State.Q115;
                 }
             case '.':
-                switch (currentState) {
-                    case Q113:	currentState = State.Q106;
-                    default:	currentState = State.Q115;
+                switch (state) {
+                    case Q113:	return State.Q106;
+                    default:	return State.Q115;
                 }
             default:
-                currentState = State.Q115;
+                return State.Q115;
         }
     }
 
