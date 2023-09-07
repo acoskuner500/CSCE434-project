@@ -370,202 +370,526 @@ public class Token {
         Q114, // float val done
         Q115  // invalid done
     }
-
     // Function to execute state transitions
-    public static State automaton (State state, char input) {
-        switch (input) {
+    public static State automaton(State state, char input) {
+        switch (state) {
+            case Q0:
+                if (isAlpha(input)) {
+                    switch (input) {
+                        case 'a': return State.Q1;
+                        case 'b': return State.Q4;
+                        case 'c': return State.Q8;
+                        case 'd': return State.Q12;
+                        case 'e': return State.Q14;
+                        case 'f': return State.Q18;
+                        case 'i': return State.Q35;
+                        case 'm': return State.Q39;
+                        case 'n': return State.Q43;
+                        case 'o': return State.Q46;
+                        case 'r': return State.Q49;
+                        case 't': return State.Q59;
+                        case 'u': return State.Q66;
+                        case 'v': return State.Q71;
+                        case 'w': return State.Q75;
+                        default: return State.Q80;
+                    }
+                } else if (isNumeral(input)) {
+                    return State.Q113;
+                } else {
+                    switch (input) {
+                        case '^': return State.Q81;
+                        case '*': return State.Q83;
+                        case '/': return State.Q85;
+                        case '%': return State.Q87;
+                        case '+': return State.Q89;
+                        case '-': return State.Q91;
+                        case '=': return State.Q93;
+                        case '!': return State.Q95;
+                        case '<': return State.Q97;
+                        case '>': return State.Q99;
+                        case '(': return State.Q107;
+                        case ')': return State.Q108;
+                        case '{': return State.Q109;
+                        case '}': return State.Q110;
+                        case '[': return State.Q111;
+                        case ']': return State.Q112;
+                        case ',': return State.Q103;
+                        case ':': return State.Q104;
+                        case ';': return State.Q105;
+                        case '.': return State.Q106;
+                        default: return State.Q115;
+                    }
+                }
+            case Q1:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q2;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q2:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'd') return State.Q3;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q3:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q4:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q5;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q5:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q6;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q6:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q7;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q7:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q8:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'a') return State.Q9;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q9:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q10;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q10:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q11;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q11:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q12:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q13;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q13:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q14:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q15;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q15:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 's') return State.Q16;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q16:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q17;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q17:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q18:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'a') return State.Q19;
+                    else if (input == 'i') return State.Q23;
+                    else if (input == 'l') return State.Q24;
+                    else if (input == 'u') return State.Q28;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q19:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q20;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q20:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 's') return State.Q21;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q21:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q22;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q22:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q23:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q24:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q25;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q25:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'a') return State.Q26;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q26:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q27;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q27:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q28:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q29;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q29:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'c') return State.Q30;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q30:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q31;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q31:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'i') return State.Q32;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q32:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q33;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q33:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q34;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q34:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q35:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'f') return State.Q36;
+                    else if (input == 'n') return State.Q37;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q36:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q37:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q38;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q38:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q39:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'a') return State.Q40;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q40:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'i') return State.Q41;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q41:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q42;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q42:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q43:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q44;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q44:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q45;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q45:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q46:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'd') return State.Q47;
+                    else if (input == 'r') return State.Q48;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q47:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q48:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q49:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q50;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q50:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'p') return State.Q51;
+                    else if (input == 't') return State.Q55;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q51:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q52;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q52:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'a') return State.Q53;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q53:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q54;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q54:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q55:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'u') return State.Q56;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q56:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'r') return State.Q57;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q57:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q58;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q58:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q59:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'h') return State.Q60;
+                    if (input == 'r') return State.Q63;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q60:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q61;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q61:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q62;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q62:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q63:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'u') return State.Q64;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q64:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q65;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q65:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q66:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'n') return State.Q67;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q67:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 't') return State.Q68;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q68:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'i') return State.Q69;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q69:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q70;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q70:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q71:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'o') return State.Q72;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q72:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'i') return State.Q73;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q73:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'd') return State.Q74;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q74:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q75:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'h') return State.Q76;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q76:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'i') return State.Q77;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q77:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'l') return State.Q78;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q78:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    if (input == 'e') return State.Q79;
+                    else return State.Q80;
+                } else return State.Q115;
+            case Q79:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q80:
+                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                    return State.Q80;
+                } else return State.Q115;
+            case Q81:
+                if (input == '=') return State.Q82;
+                else return State.Q115;
+            // case Q82:
+            case Q83:
+                if (input == '=') return State.Q84;
+                else return State.Q115;
+            // case Q84:
+            case Q85:
+                if (input == '=') return State.Q86;
+                else return State.Q115;
+            // case Q86:
+            case Q87:
+                if (input == '=') return State.Q88;
+                else return State.Q115;
+            // case Q88:
+            case Q89:
+                if (input == '=') return State.Q90;
+                else if (input == '+') return State.Q101;
+                else return State.Q115;
+            // case Q90:
+            case Q91:
+                if (input == '=') return State.Q92;
+                else if (input == '-') return State.Q102;
+                else if (isNumeral(input)) return State.Q113;
+                else return State.Q115;
+            // case Q92:
+            case Q93:
+                if (input == '=') return State.Q94;
+                else return State.Q115;
+            // case Q94:
+            case Q95:
+                if (input == '=') return State.Q96;
+                else return State.Q115;
+            // case Q96:
+            case Q97:
+                if (input == '=') return State.Q98;
+                else return State.Q115;
+            // case Q98:
+            case Q99:
+                if (input == '=') return State.Q100;
+                else return State.Q115;
+            // case Q100:
+            // case Q101:
+            // case Q102:
+            // case Q103:
+            // case Q104:
+            // case Q105:
+            case Q106:
+                if (isNumeral(input)) return State.Q114;
+                else return State.Q115;
+            // case Q107:
+            // case Q108:
+            // case Q109:
+            // case Q110:
+            // case Q111:
+            // case Q112:
+            case Q113:
+                if (input == '.') return State.Q106;
+                else if (isNumeral(input)) return State.Q113;
+                else return State.Q115;
+            case Q114:
+                if (isNumeral(input)) return State.Q114;
+                else return State.Q115;
+            // case Q115:
+            default: return State.Q115;
+        }
+    }
+
+    private static boolean isAlpha(char c) {
+        switch (c) {
             case 'a':
-                switch (state) {
-                    case Q0:	return State.Q1;
-                    case Q8:	return State.Q9;
-                    case Q18:	return State.Q19;
-                    case Q25:	return State.Q26;
-                    case Q39:	return State.Q40;
-                    case Q52:	return State.Q53;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'b':
-                switch (state) {
-                    case Q0:	return State.Q4;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'c':
-                switch (state) {
-                    case Q0:	return State.Q8;
-                    case Q29:	return State.Q30;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'd':
-                switch (state) {
-                    case Q2:	return State.Q3;
-                    case Q0:	return State.Q12;
-                    case Q46:	return State.Q47;
-                    case Q73:	return State.Q74;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'e':
-                switch (state) {
-                    case Q0:	return State.Q14;
-                    case Q16:	return State.Q17;
-                    case Q21:	return State.Q22;
-                    case Q49:	return State.Q50;
-                    case Q51:	return State.Q52;
-                    case Q60:	return State.Q61;
-                    case Q64:	return State.Q65;
-                    case Q78:	return State.Q79;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'f':
-                switch (state) {
-                    case Q0:	return State.Q18;
-                    case Q35:	return State.Q36;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'g':
-                switch (state) {
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'h':
-                switch (state) {
-                    case Q59:	return State.Q60;
-                    case Q75:	return State.Q76;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'i':
-                switch (state) {
-                    case Q18:	return State.Q23;
-                    case Q31:	return State.Q32;
-                    case Q0:	return State.Q35;
-                    case Q40:	return State.Q41;
-                    case Q68:	return State.Q69;
-                    case Q72:	return State.Q73;
-                    case Q76:	return State.Q77;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'j':
-            case 'k':
-                switch (state) {
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'l':
-                switch (state) {
-                    case Q6:	return State.Q7;
-                    case Q9:	return State.Q10;
-                    case Q10:	return State.Q11;
-                    case Q14:	return State.Q15;
-                    case Q18:	return State.Q24;
-                    case Q19:	return State.Q20;
-                    case Q69:	return State.Q70;
-                    case Q77:	return State.Q78;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'm':
-                switch (state) {
-                    case Q0:	return State.Q39;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'n':
-                switch (state) {
-                    case Q1:	return State.Q2;
-                    case Q28:	return State.Q29;
-                    case Q33:	return State.Q34;
-                    case Q35:	return State.Q37;
-                    case Q41:	return State.Q42;
-                    case Q0:	return State.Q43;
-                    case Q57:	return State.Q58;
-                    case Q61:	return State.Q62;
-                    case Q66:	return State.Q67;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'o':
-                switch (state) {
-                    case Q4:	return State.Q5;
-                    case Q5:	return State.Q6;
-                    case Q12:	return State.Q13;
-                    case Q24:	return State.Q25;
-                    case Q32:	return State.Q33;
-                    case Q43:	return State.Q44;
-                    case Q0:	return State.Q46;
-                    case Q71:	return State.Q72;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'p':
-                switch (state) {
-                    case Q50:	return State.Q51;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'q':
-                switch (state) {
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'r':
-                switch (state) {
-                    case Q46:	return State.Q48;
-                    case Q0:	return State.Q49;
-                    case Q56:	return State.Q57;
-                    case Q59:	return State.Q63;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 's':
-                switch (state) {
-                    case Q20:	return State.Q21;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 't':
-                switch (state) {
-                    case Q26:	return State.Q27;
-                    case Q30:	return State.Q31;
-                    case Q37:	return State.Q38;
-                    case Q44:	return State.Q45;
-                    case Q53:	return State.Q54;
-                    case Q50:	return State.Q55;
-                    case Q0:	return State.Q59;
-                    case Q67:	return State.Q68;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'u':
-                switch (state) {
-                    case Q18:	return State.Q28;
-                    case Q55:	return State.Q56;
-                    case Q63:	return State.Q64;
-                    case Q0:	return State.Q66;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'v':
-                switch (state) {
-                    case Q0:	return State.Q71;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
             case 'w':
-                switch (state) {
-                    case Q0:	return State.Q75;
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
-            case 'x':
-            case 'y':
-            case 'z':
             case 'A':
             case 'B':
             case 'C':
@@ -591,11 +915,13 @@ public class Token {
             case 'W':
             case 'X':
             case 'Y':
-            case 'Z':
-                switch (state) {
-                    case Q80:	return State.Q80;
-                    default:	return State.Q115;
-                }
+            case 'Z': return true;
+            default: return false;
+        }
+    }
+
+    private static boolean isNumeral(char c) {
+        switch (c) {
             case '0':
             case '1':
             case '2':
@@ -605,129 +931,8 @@ public class Token {
             case '6':
             case '7':
             case '8':
-            case '9':
-                switch (state) {
-                    case Q0:	return State.Q113;
-                    case Q113:	return State.Q113;
-                    case Q91:	return State.Q113;
-                    case Q106:	return State.Q114;
-                    case Q114:	return State.Q114;
-                    default:	return State.Q115;
-                }
-            case '^':
-                switch (state) {
-                    case Q0:	return State.Q81;
-                    default:	return State.Q115;
-                }
-            case '*':
-                switch (state) {
-                    case Q0:	return State.Q83;
-                    default:	return State.Q115;
-                }
-            case '/':
-                switch (state) {
-                    case Q0:	return State.Q85;
-                    default:	return State.Q115;
-                }
-            case '%':
-                switch (state) {
-                    case Q0:	return State.Q87;
-                    default:	return State.Q115;
-                }
-            case '+':
-                switch (state) {
-                    case Q0:	return State.Q89;
-                    case Q89:	return State.Q101;
-                    default:	return State.Q115;
-                }
-            case '-':
-                switch (state) {
-                    case Q0:	return State.Q91;
-                    case Q91:	return State.Q102;
-                    default:	return State.Q115;
-                }
-            case '=':
-                switch (state) {
-                    case Q0:	return State.Q93;
-                    case Q81:	return State.Q82;
-                    case Q83:	return State.Q84;
-                    case Q85:	return State.Q86;
-                    case Q87:	return State.Q88;
-                    case Q89:	return State.Q90;
-                    case Q91:	return State.Q92;
-                    case Q93:	return State.Q94;
-                    case Q95:	return State.Q96;
-                    case Q97:	return State.Q98;
-                    case Q99:	return State.Q100;
-                    default:	return State.Q115;
-                }
-            case '!':
-                switch (state) {
-                    case Q0:	return State.Q95;
-                    default:	return State.Q115;
-                }
-            case '<':
-                switch (state) {
-                    case Q0:	return State.Q97;
-                    default:	return State.Q115;
-                }
-            case '>':
-                switch (state) {
-                    case Q0:	return State.Q99;
-                    default:	return State.Q115;
-                }
-            case '(':
-                switch (state) {
-                    case Q0:	return State.Q107;
-                    default:	return State.Q115;
-                }
-            case ')':
-                switch (state) {
-                    case Q0:	return State.Q108;
-                    default:	return State.Q115;
-                }
-            case '{':
-                switch (state) {
-                    case Q0:	return State.Q109;
-                    default:	return State.Q115;
-                }
-            case '}':
-                switch (state) {
-                    case Q0:	return State.Q110;
-                    default:	return State.Q115;
-                }
-            case '[':
-                switch (state) {
-                    case Q0:	return State.Q111;
-                    default:	return State.Q115;
-                }
-            case ']':
-                switch (state) {
-                    case Q0:	return State.Q112;
-                    default:	return State.Q115;
-                }
-            case ',':
-                switch (state) {
-                    case Q0:	return State.Q103;
-                    default:	return State.Q115;
-                }
-            case ':':
-                switch (state) {
-                    case Q0:	return State.Q104;
-                    default:	return State.Q115;
-                }
-            case ';':
-                switch (state) {
-                    case Q0:	return State.Q105;
-                    default:	return State.Q115;
-                }
-            case '.':
-                switch (state) {
-                    case Q113:	return State.Q106;
-                    default:	return State.Q115;
-                }
-            default:
-                return State.Q115;
+            case '9': return true;
+            default: return false;
         }
     }
 
