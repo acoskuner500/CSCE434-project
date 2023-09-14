@@ -173,7 +173,7 @@ public class Token {
     }
 
     // TODO: function to query a token about its kind - boolean is (Token.Kind kind)
-    public boolean isKind (Kind kind) {
+    public boolean is(Kind kind) {
         return (this.kind == kind);
     }
 
