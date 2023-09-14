@@ -1,0 +1,30 @@
+main
+int input, i, myvar, sum;
+
+function sumDigits (int n) : int
+{
+    int sum;
+
+    let sum = 0;
+    while (n > 0) do
+        let sum += n % 10;
+        let n /= 10;
+    od;
+    return sum;
+};
+
+{
+    let input = call readInt();
+    let i = 0;
+    while (i < input) do
+        let myvar = call readInt();
+        call printInt(myvar);
+        call println();
+
+        let sum = call sumDigits(myvar);
+        call printInt(sum);
+        call println();
+
+        let i++;
+    od;
+}.

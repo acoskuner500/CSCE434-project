@@ -1,0 +1,13 @@
+main    // MAIN
+mian    // IDENT mian
+mai n   // IDENT mai, IDENT n
+maiN    // IDENT maiN
+ma$int   // IDENT ma, ERROR, INT
+// main
+1main   // ERROR
+main1   // IDENT main1
+main_   // IDENT main_
+_main   // ERROR
+main(   // MAIN, OPEN_PAREN
+main)   // MAIN, CLOSE_PAREN
+ma/* comment */in  // MAIN

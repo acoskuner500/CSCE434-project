@@ -1,14 +1,18 @@
-# Param(
-#     [Parameter(Mandatory)]
-#     $test
-# )
-$tests = (Get-ChildItem .\CSCE434-project\testcases\*.txt -Name)
+Param(
+    [Parameter(Mandatory)]
+    $DIR,
+    [Parameter(Mandatory)]
+    $PA
+)
+$projectname = (Get-ChildItem $DIR\code\PA$PA* -Name)
+$tester = 'coco.' + $projectname.Substring(4, $projectname.Length - 4) + 'Tester'
+$java = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin\java.exe'
+Write-Host $tester
+# $tests = (Get-Item $DIR\testcases\PA$PA\*.txt)
 
 foreach ($test in $tests) {
-    # Write-Host $test
-    $out = $test.Substring($test.length-11,$test.length-4)
-    # if ($out -notmatch 'test000') {
-    #     continue
-    # }
-    & 'C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin\java.exe' '@C:\Users\acosk\AppData\Local\Temp\cp_dlbnw73ff7s2bc9yrj30ds1h3.argfile' 'coco.ScannerTester' -s .\CSCE434-project\testcases\$test > ".\CSCE434-project\output\$out.out"
+    $filename = (Get-ChildItem $test -Name)
+    $testname = $filename.Substring(0, $filename.Length - 4)
+    & $java '@C:\Users\acosk\AppData\Local\Temp\cp_9teqvttycdu5qbm50i8pr2uhu.argfile' $tester -s $test > "$DIR\output\PA$PA\$testname.out"
 }
+Select-String -Path "$DIR\output\PA$PA\*.out" -Pattern "ERROR" > $DIR\output\PA$PA\errors.txt

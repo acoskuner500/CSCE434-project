@@ -1,0 +1,12 @@
+// floating numbers
+main
+
+float f, g;
+
+{
+    let f = 10.056;
+    let g = -10.0;
+
+    call printFloat(f - g);
+    call println();
+}.

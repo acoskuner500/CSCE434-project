@@ -152,7 +152,6 @@ public class Token {
         // if we don't match anything, signal error
         this.kind = Kind.ERROR;
         this.lexeme = "Unrecognized lexeme: " + lexeme;
-        System.out.print(this.lexeme + "\t");
     }
 
     public int lineNumber () {
@@ -244,10 +243,11 @@ public class Token {
             case Q110:  return Kind.CLOSE_BRACE;
             case Q111:  return Kind.OPEN_BRACKET;
             case Q112:  return Kind.CLOSE_BRACKET;
-            case Q80:   return Kind.IDENT;
+            // case Q80:   return Kind.IDENT;
             case Q113:  return Kind.INT_VAL;
             case Q114:  return Kind.FLOAT_VAL;
-            default:    return Kind.ERROR;
+            case Q115:  return Kind.ERROR;
+            default:    return Kind.IDENT;
         }
     }
 
@@ -374,7 +374,7 @@ public class Token {
     public static State automaton(State state, char input) {
         switch (state) {
             case Q0:
-                if (isAlpha(input)) {
+                if (Character.isLetter(input)) {
                     switch (input) {
                         case 'a': return State.Q1;
                         case 'b': return State.Q4;
@@ -393,7 +393,7 @@ public class Token {
                         case 'w': return State.Q75;
                         default: return State.Q80;
                     }
-                } else if (isNumeral(input)) {
+                } else if (Character.isDigit(input)) {
                     return State.Q113;
                 } else {
                     switch (input) {
@@ -421,87 +421,87 @@ public class Token {
                     }
                 }
             case Q1:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q2;
                     else return State.Q80;
                 } else return State.Q115;
             case Q2:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'd') return State.Q3;
                     else return State.Q80;
                 } else return State.Q115;
             case Q3:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q4:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q5;
                     else return State.Q80;
                 } else return State.Q115;
             case Q5:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q6;
                     else return State.Q80;
                 } else return State.Q115;
             case Q6:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q7;
                     else return State.Q80;
                 } else return State.Q115;
             case Q7:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q8:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'a') return State.Q9;
                     else return State.Q80;
                 } else return State.Q115;
             case Q9:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q10;
                     else return State.Q80;
                 } else return State.Q115;
             case Q10:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q11;
                     else return State.Q80;
                 } else return State.Q115;
             case Q11:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q12:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q13;
                     else return State.Q80;
                 } else return State.Q115;
             case Q13:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q14:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q15;
                     else return State.Q80;
                 } else return State.Q115;
             case Q15:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 's') return State.Q16;
                     else return State.Q80;
                 } else return State.Q115;
             case Q16:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q17;
                     else return State.Q80;
                 } else return State.Q115;
             case Q17:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q18:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'a') return State.Q19;
                     else if (input == 'i') return State.Q23;
                     else if (input == 'l') return State.Q24;
@@ -509,299 +509,299 @@ public class Token {
                     else return State.Q80;
                 } else return State.Q115;
             case Q19:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q20;
                     else return State.Q80;
                 } else return State.Q115;
             case Q20:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 's') return State.Q21;
                     else return State.Q80;
                 } else return State.Q115;
             case Q21:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q22;
                     else return State.Q80;
                 } else return State.Q115;
             case Q22:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q23:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q24:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q25;
                     else return State.Q80;
                 } else return State.Q115;
             case Q25:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'a') return State.Q26;
                     else return State.Q80;
                 } else return State.Q115;
             case Q26:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q27;
                     else return State.Q80;
                 } else return State.Q115;
             case Q27:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q28:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q29;
                     else return State.Q80;
                 } else return State.Q115;
             case Q29:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'c') return State.Q30;
                     else return State.Q80;
                 } else return State.Q115;
             case Q30:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q31;
                     else return State.Q80;
                 } else return State.Q115;
             case Q31:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'i') return State.Q32;
                     else return State.Q80;
                 } else return State.Q115;
             case Q32:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q33;
                     else return State.Q80;
                 } else return State.Q115;
             case Q33:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q34;
                     else return State.Q80;
                 } else return State.Q115;
             case Q34:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q35:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'f') return State.Q36;
                     else if (input == 'n') return State.Q37;
                     else return State.Q80;
                 } else return State.Q115;
             case Q36:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q37:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q38;
                     else return State.Q80;
                 } else return State.Q115;
             case Q38:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q39:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'a') return State.Q40;
                     else return State.Q80;
                 } else return State.Q115;
             case Q40:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'i') return State.Q41;
                     else return State.Q80;
                 } else return State.Q115;
             case Q41:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q42;
                     else return State.Q80;
                 } else return State.Q115;
             case Q42:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q43:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q44;
                     else return State.Q80;
                 } else return State.Q115;
             case Q44:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q45;
                     else return State.Q80;
                 } else return State.Q115;
             case Q45:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q46:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'd') return State.Q47;
                     else if (input == 'r') return State.Q48;
                     else return State.Q80;
                 } else return State.Q115;
             case Q47:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q48:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q49:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q50;
                     else return State.Q80;
                 } else return State.Q115;
             case Q50:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'p') return State.Q51;
                     else if (input == 't') return State.Q55;
                     else return State.Q80;
                 } else return State.Q115;
             case Q51:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q52;
                     else return State.Q80;
                 } else return State.Q115;
             case Q52:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'a') return State.Q53;
                     else return State.Q80;
                 } else return State.Q115;
             case Q53:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q54;
                     else return State.Q80;
                 } else return State.Q115;
             case Q54:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q55:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'u') return State.Q56;
                     else return State.Q80;
                 } else return State.Q115;
             case Q56:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'r') return State.Q57;
                     else return State.Q80;
                 } else return State.Q115;
             case Q57:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q58;
                     else return State.Q80;
                 } else return State.Q115;
             case Q58:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q59:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'h') return State.Q60;
                     if (input == 'r') return State.Q63;
                     else return State.Q80;
                 } else return State.Q115;
             case Q60:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q61;
                     else return State.Q80;
                 } else return State.Q115;
             case Q61:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q62;
                     else return State.Q80;
                 } else return State.Q115;
             case Q62:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q63:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'u') return State.Q64;
                     else return State.Q80;
                 } else return State.Q115;
             case Q64:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q65;
                     else return State.Q80;
                 } else return State.Q115;
             case Q65:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q66:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'n') return State.Q67;
                     else return State.Q80;
                 } else return State.Q115;
             case Q67:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 't') return State.Q68;
                     else return State.Q80;
                 } else return State.Q115;
             case Q68:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'i') return State.Q69;
                     else return State.Q80;
                 } else return State.Q115;
             case Q69:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q70;
                     else return State.Q80;
                 } else return State.Q115;
             case Q70:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q71:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'o') return State.Q72;
                     else return State.Q80;
                 } else return State.Q115;
             case Q72:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'i') return State.Q73;
                     else return State.Q80;
                 } else return State.Q115;
             case Q73:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'd') return State.Q74;
                     else return State.Q80;
                 } else return State.Q115;
             case Q74:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q75:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'h') return State.Q76;
                     else return State.Q80;
                 } else return State.Q115;
             case Q76:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'i') return State.Q77;
                     else return State.Q80;
                 } else return State.Q115;
             case Q77:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'l') return State.Q78;
                     else return State.Q80;
                 } else return State.Q115;
             case Q78:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     if (input == 'e') return State.Q79;
                     else return State.Q80;
                 } else return State.Q115;
             case Q79:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q80:
-                if (isAlpha(input) || isNumeral(input) || (input == '_')) {
+                if (isIdentChar(input)) {
                     return State.Q80;
                 } else return State.Q115;
             case Q81:
@@ -828,7 +828,7 @@ public class Token {
             case Q91:
                 if (input == '=') return State.Q92;
                 else if (input == '-') return State.Q102;
-                else if (isNumeral(input)) return State.Q113;
+                else if (Character.isDigit(input)) return State.Q113;
                 else return State.Q115;
             // case Q92:
             case Q93:
@@ -853,7 +853,7 @@ public class Token {
             // case Q104:
             // case Q105:
             case Q106:
-                if (isNumeral(input)) return State.Q114;
+                if (Character.isDigit(input)) return State.Q114;
                 else return State.Q115;
             // case Q107:
             // case Q108:
@@ -863,77 +863,18 @@ public class Token {
             // case Q112:
             case Q113:
                 if (input == '.') return State.Q106;
-                else if (isNumeral(input)) return State.Q113;
+                else if (Character.isDigit(input)) return State.Q113;
                 else return State.Q115;
             case Q114:
-                if (isNumeral(input)) return State.Q114;
+                if (Character.isDigit(input)) return State.Q114;
                 else return State.Q115;
             // case Q115:
             default: return State.Q115;
         }
     }
 
-    private static boolean isAlpha(char c) {
-        switch (c) {
-            case 'a':
-            case 'b':
-            case 'c':
-            case 'd':
-            case 'e':
-            case 'f':
-            case 'i':
-            case 'm':
-            case 'n':
-            case 'o':
-            case 'r':
-            case 't':
-            case 'u':
-            case 'v':
-            case 'w':
-            case 'A':
-            case 'B':
-            case 'C':
-            case 'D':
-            case 'E':
-            case 'F':
-            case 'G':
-            case 'H':
-            case 'I':
-            case 'J':
-            case 'K':
-            case 'L':
-            case 'M':
-            case 'N':
-            case 'O':
-            case 'P':
-            case 'Q':
-            case 'R':
-            case 'S':
-            case 'T':
-            case 'U':
-            case 'V':
-            case 'W':
-            case 'X':
-            case 'Y':
-            case 'Z': return true;
-            default: return false;
-        }
-    }
-
-    private static boolean isNumeral(char c) {
-        switch (c) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9': return true;
-            default: return false;
-        }
+    private static boolean isIdentChar(char c) {
+        return (Character.isLetterOrDigit(c) || (c == '_'));
     }
 
     @Override

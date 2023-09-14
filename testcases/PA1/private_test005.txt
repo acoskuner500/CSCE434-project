@@ -1,0 +1,16 @@
+// Identifiers Test
+main
+
+int a1, b_c, d__, e12_3f, mainif
+
+{
+    let a1 = 5;
+    call printInt(a1);
+
+    let b_c = a1 ^ a1;
+    call printInt(b_c);
+
+    let e12_3f = b_c + a1;
+    let d__ = b_c % a1;
+    let mainif = d__ + e12_3f
+}.
