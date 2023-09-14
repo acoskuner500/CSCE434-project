@@ -3,7 +3,9 @@ package coco;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Scanner implements Iterator<Token> {
@@ -160,10 +162,24 @@ public class Scanner implements Iterator<Token> {
                     continue;
                 }
             } else {
-                if ((nextChar == -1) || 
-                    (Character.isWhitespace(nextChar)) || 
-                    (!Token.invalidState(prevState) && Token.invalidState(state))) {
+                if (nextChar == -1 || Character.isWhitespace(nextChar)) {
                     lexemeFound = true;
+                }
+                switch (state) {
+                    case Q0:
+                    case Q95:
+                    case Q114:
+                        lexemeFound = false;
+                        break;
+                    case Q116:
+                        if (!illegals.contains((char) nextChar) && prevState != Token.State.Q116) {
+                            lexemeFound = true;
+                        }
+                        if (Token.isFinalState(prevState) ||
+                        (Token.isTransientState(prevState) && prevState != Token.State.Q113 && prevState != Token.State.Q115)) {
+                            lexemeFound = true;
+                        }
+                    default:
                 }
             }
             if (lexemeFound) break;
@@ -177,4 +193,7 @@ public class Scanner implements Iterator<Token> {
     // OPTIONAL: add any additional helper or convenience methods
     //           that you find make for a cleaner design
     //           (useful for handling special case Tokens)
+    private List<Character> illegals = Arrays.asList(
+        '~', '`', '@', '#', '$', '&', '|', '\\', '\'', '\"', '?'
+    );
 }
