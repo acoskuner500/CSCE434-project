@@ -1,0 +1,23 @@
+// Test complex if statement relation using all expression types and early return statement
+
+main
+
+int a, b, c, d, e;
+
+{
+    a = call readInt();
+    b = call readInt();
+    c = call readInt();
+    d = call readInt();
+    e = call readInt();
+
+    if (a ^ b * c + d < e) then
+        call printInt(a ^ b * c + d );
+        return;
+    else
+        call printInt(e);
+        return;
+    fi;
+
+    call printInt(605); // deadcode
+}.

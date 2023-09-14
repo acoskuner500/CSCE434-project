@@ -1,0 +1,25 @@
+// Farabi Mahmud
+// 327008950
+// tests and or not boolean logic to evaluate 3-SAT expression
+
+
+
+main 
+
+bool A, B, C, expr1, expr2, expr3, result;
+
+{
+    // read variables 
+    A = call readBool();
+    B = call readBool();
+    C = call readBool();
+
+    // define 3-SAT expressions
+    expr1 = (A or B or not C);
+    expr2 = (not A or not B or C);
+    expr3 = (A or not B or not C);
+    
+    // evaluate 3-SAT
+    result = expr1 and expr2 and expr3;
+    call printBool(result);
+}.

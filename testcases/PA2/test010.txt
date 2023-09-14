@@ -1,0 +1,23 @@
+// Eyobel Berhane
+// 328001599
+// Tests parser readX and printX for correct types
+
+
+main
+
+int a, b, c;
+float d;
+
+{
+	// Read in variables
+	a = call readFloat();
+	b = call readInt();
+	c = call readBool();
+	d = call readFloat();
+
+	// Print variables
+	call printBool(a);
+	call printInt(b);
+	call printBool(c);
+	call printFloat(d);
+}.

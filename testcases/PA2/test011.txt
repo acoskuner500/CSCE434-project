@@ -1,0 +1,31 @@
+// Samuel Torres
+// 130006243
+// Test for Assignment Operators
+main
+int a, b;
+
+{
+  //Assignment Operators
+  a = 1;
+  b = 2;
+
+  //a = 3
+  a += b;
+
+  //a = 6
+  a *= b;
+
+  //a = 4
+  a -= b;
+
+  //a = 2
+  a /= b;
+
+  // a = 0
+  a %= 2;
+
+  // a = 2
+  a ^= 2;
+
+  call printInt(a);
+}.
