@@ -7,8 +7,7 @@ Param(
 $projectname = (Get-ChildItem $DIR\code\PA$PA* -Name)
 $tester = 'coco.' + $projectname.Substring(4, $projectname.Length - 4) + 'Tester'
 $java = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin\java.exe'
-Write-Host $tester
-# $tests = (Get-Item $DIR\testcases\PA$PA\*.txt)
+$tests = (Get-Item $DIR\testcases\PA$PA\*.txt)
 
 foreach ($test in $tests) {
     $filename = (Get-ChildItem $test -Name)
