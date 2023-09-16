@@ -1,0 +1,18 @@
+// Factor out test005
+//  Gaultier Delbarre 830006271
+//  Test that an if with a false conditional will not execute
+//
+
+main
+
+{
+
+  if(  false ) then
+    if ( true ) then
+      call printFloat( 3.14 );
+    fi;
+  else
+    call printFloat( 2.71 );
+  fi;
+
+}.

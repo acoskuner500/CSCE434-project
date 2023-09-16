@@ -1,0 +1,27 @@
+// Caleb Austin 830006168
+// Tests to make sure all operations work without crashing
+
+main
+int i;
+float f;
+bool b;
+{
+	i = 1 + 1;
+	i = 1 - 1;
+	i = 1 * 1;
+	i = 1 / 1;
+	i = 1 % 1;
+	i++;
+	i--;
+	
+	f = 1.0 + 1.0;
+	f = 1.0 - 1.0;
+	f = 1.0 * 1.0;
+	f = 1.0 / 1.0;
+	f = 1.0 % 1.0;
+	f++;
+	f--;
+	
+	b = true or true;
+	b = true and true;
+}.

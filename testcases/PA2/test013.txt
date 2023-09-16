@@ -1,0 +1,11 @@
+//Himani Deshpande 730007406
+//checking parsing for returnStat = "return" [relExpr]
+
+main 
+
+int a,b,c;
+{
+a=4;
+b=3;
+c=9;
+return (a ^ b ^ c);  } .

@@ -1,0 +1,14 @@
+// Aurko Routh
+// 231006888
+// variable assignment, reassignment within conditionals via unary increment
+
+main
+
+int num;
+{
+num = 1;
+if(true) then
+  num++;
+fi;
+printInt(num);
+}.

@@ -1,0 +1,19 @@
+// Hayden Holt
+// 530003266
+// Tests if statement conditionals, incrementing, and mod operator
+
+
+main
+
+int a, b, c;
+{
+    a = 0;
+    b = 1;
+    c = 3;
+    if(a == b) then
+        b--;
+    else
+        c++;
+    fi;
+    return (b % c);
+}.

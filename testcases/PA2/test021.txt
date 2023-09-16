@@ -1,0 +1,20 @@
+// Ahmet Coskuner
+// 12609366
+// while and repeat loops, relations
+// var declaration inside and out of main
+
+main
+
+int outsideNum;
+{
+    int insideNum;
+    outsideNum = 5;
+    insideNum = outsideNum++;
+    while (insideNum > 0) do
+        call printInt(insideNum * outsideNum);
+        insideNum--;
+        repeat
+            outsideNum += 2;
+        until (outsideNum > 10)
+    od
+}.

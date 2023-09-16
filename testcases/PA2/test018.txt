@@ -1,0 +1,28 @@
+// Jaiden Kimmelman
+// 328000077
+// Testing boolean expressions in nested if statement and testing early return statement
+
+main
+
+bool a, b;
+int x, y; 
+float z;
+
+{
+	A = call readBool();
+	B = true;
+	
+	x = 14;
+	y = 5;
+	z = call readFloat();
+
+	if (not(A and B) and (z < x)) then
+		if (z >= y) then
+			call printFloat(z);
+		fi;
+	else 
+		return;
+	fi;
+
+	call printInt(x + y);
+}.
