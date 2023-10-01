@@ -1,8 +1,6 @@
 package coco;
 
 import java.io.*;
-
-// You need to put jar files in lib/ in your classpath
 import org.apache.commons.cli.*;
 
 public class CompilerTester {
@@ -13,7 +11,10 @@ public class CompilerTester {
         options.addOption("i", "in", true, "Data File");
         options.addOption("nr", "reg", true, "Num Regs");
         options.addOption("b", "asm", false, "Print DLX instructions");
-        options.addOption("a", "astOut", false, "Print AST");
+        options.addOption("a", "astOut", false, "Print AST to screen");
+
+        options.addOption("gDir", "graphDir", false, "Graph dir, default will be current dir");
+        options.addOption("ast", "ast", false, "Print AST.txt - requires graphs/");
 
 
         HelpFormatter formatter = new HelpFormatter();
@@ -69,9 +70,24 @@ public class CompilerTester {
         
         Compiler c = new Compiler(s, numRegs);
         ast.AST ast = c.genAST();
-        // For PA4 you are not required to generate and execute any code
+        
+        String ast_text = ast.printPreOrder();
+        if (cmd.hasOption("a")) { // AST to Screen
+            System.out.println(ast_text);
+        }
 
-        if (cmd.hasOption("astOut")) {
+        // create graph dir if needed
+        String graphDir = "";
+        if (cmd.hasOption("graphDir")) {
+            graphDir = cmd.getOptionValue("graphDir");
+            File dir = new File(graphDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
+
+
+        if (cmd.hasOption("ast")) {
             String astFile = sourceFile.substring(0, sourceFile.lastIndexOf('.')) + "_ast.txt";
             try (PrintStream out = new PrintStream(astFile)) {
                 out.println(ast.printPreOrder());

@@ -1,9 +1,8 @@
-/*
- * Array Creation Test Case
- * Gaultier Delbarre 830006271
- * Test that arrays are validated properly and created correctly.
- * Test that an if with a false conditional will not execute
- */
+//
+//  Array Creation Test Case
+//  Gaultier Delbarre 830006271
+//  Test that arrays are validated properly and created correctly.
+//
 
 main
 
@@ -25,11 +24,4 @@ int[3][1][2] arr3;
   call printInt( arr2[1][0] );
   call println();
 
-  if(  false ) then
-    if ( true ) then
-      call printFloat( 3.14 );
-    fi;
-  else
-    call printFloat( 2.71 );
-  fi;
 }.

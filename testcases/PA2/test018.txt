@@ -9,14 +9,14 @@ int x, y;
 float z;
 
 {
-	A = call readBool();
-	B = true;
+	a = call readBool();
+	b = true;
 	
 	x = 14;
 	y = 5;
 	z = call readFloat();
 
-	if (not(A and B) and (z < x)) then
+	if (not (a and b) and (z < x)) then
 		if (z >= y) then
 			call printFloat(z);
 		fi;

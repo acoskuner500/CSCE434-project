@@ -26,3 +26,5 @@ hs_err_pid*
 .vscode
 
 # private, personal tests
+testcases/
+output/

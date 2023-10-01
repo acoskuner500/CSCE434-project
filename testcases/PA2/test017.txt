@@ -10,5 +10,5 @@ num = 1;
 if(true) then
   num++;
 fi;
-printInt(num);
+call printInt(num);
 }.

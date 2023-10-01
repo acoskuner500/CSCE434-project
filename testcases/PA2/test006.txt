@@ -10,7 +10,7 @@ bool boolean_example;
 {
     x++;
     x = 2 + 2;
-    yyyaya = (69 ^ 7);
+    yyyaya = (2 ^ 7);
     example = (1+2*3^4);
     boolean_example = (((((((((((1 == (7 - 6 ^ 1))))))))))));
 }.

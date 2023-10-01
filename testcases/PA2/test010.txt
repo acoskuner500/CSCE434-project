@@ -1,12 +1,14 @@
 // Eyobel Berhane
 // 328001599
-// Tests parser readX and printX for correct types
+// Tests parser readX and printX for correct types, as well as boolean assignment
 
 
 main
 
-int a, b, c;
-float d;
+int b;
+bool c;
+float a, d;
+bool e;
 
 {
 	// Read in variables
@@ -16,8 +18,13 @@ float d;
 	d = call readFloat();
 
 	// Print variables
-	call printBool(a);
+	call printFloat(a);
 	call printInt(b);
 	call printBool(c);
 	call printFloat(d);
+
+        // Define a boolean e
+        e = a > d;
+        call printBool(e);
+
 }.

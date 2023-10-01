@@ -81,8 +81,8 @@ public enum NonTerminal {
     LITERAL(new HashSet<Token.Kind>() {
         private static final long serialVersionUID = 1L;
         {
-            add(Token.Kind.TRUE);
-            add(Token.Kind.FALSE);
+            // add(Token.Kind.TRUE);
+            // add(Token.Kind.FALSE);
             add(Token.Kind.INT_VAL);
             add(Token.Kind.FLOAT_VAL);
         }

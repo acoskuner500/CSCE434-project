@@ -30,7 +30,8 @@ bool i, j, k;
     call printBool(i and j or k);
 
     // mixed
-    call printBool(x + y + z < x - y - z or i and not(j or k));
+    // fixed error with precedence for mixed type operations
+    call printBool((x + y + z < x - y - z) or i and not(j or k));
 
     // func call
     call printInt(x + call readInt() + z);

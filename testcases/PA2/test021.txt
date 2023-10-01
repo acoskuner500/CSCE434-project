@@ -1,20 +1,28 @@
 // Ahmet Coskuner
 // 12609366
-// while and repeat loops, relations
-// var declaration inside and out of main
+// boolean logic and inline function calls
 
 main
 
-int outsideNum;
+bool b1, b2, b3;
+int num1, num2;
 {
-    int insideNum;
-    outsideNum = 5;
-    insideNum = outsideNum++;
-    while (insideNum > 0) do
-        call printInt(insideNum * outsideNum);
-        insideNum--;
-        repeat
-            outsideNum += 2;
-        until (outsideNum > 10)
-    od
+    num1 = 0;
+    num2 = num1;
+    num2++;
+    call printInt(num1);
+    call printInt(num2);
+
+    b1 = true;
+    b2 = false;
+    b3 = num1 != num2;
+    call printBool(b1 or b2);
+    call printBool(not b1 or b2);
+    call printBool(not (b1 or b2));
+
+    if (num2 == call readInt()) then
+        call printInt(call readInt() * 2 + num1);
+    else
+        call printBool(not not b3);
+    fi;
 }.
