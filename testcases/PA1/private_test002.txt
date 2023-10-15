@@ -1,9 +1,0 @@
-/*
-    This is a block comment
-    let l = 1; // Code within comment
-*//*
-        This is a second block comment
-    */
-
-let l = 1;
-let j = 1; /* This is a third block comment */ let k = 1;
