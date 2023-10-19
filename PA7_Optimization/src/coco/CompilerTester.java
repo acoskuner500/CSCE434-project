@@ -3,8 +3,10 @@ package coco;
 import java.io.*;
 import java.util.*;
 
+
 import org.apache.commons.cli.*;
 
+//PA 7 generates 2 digraphs, one un-optimized, one optimized.
 public class CompilerTester {
 
     public static void main(String[] args) {
@@ -13,7 +15,7 @@ public class CompilerTester {
         options.addOption("i", "in", true, "Data File");
         options.addOption("nr", "reg", true, "Num Regs");
         options.addOption("b", "asm", false, "Print DLX instructions");
-        options.addOption("a", "astOut", false, "Print AST to screen");
+        options.addOption("a", "astOut", false, "Print AST");
 
         options.addOption("gDir", "graphDir", false, "Graph dir, default will be current dir");
         options.addOption("ast", "ast", false, "Print AST.dot - requires graphs/");
@@ -23,7 +25,7 @@ public class CompilerTester {
         options.addOption("allowVersions", "allowVersions", false, "Allowing versioning for files in graphs/");
 
 
-        options.addOption("o", "opt", true, "Order-sensitive optimization -allowed to have multiple");      
+        options.addOption("o", "opt", true, "Order-sensitive optimization -allowed to have multiple");
         options.addOption("max", "maxOpt", false, "Run all available optimizations till convergence");
 
         HelpFormatter formatter = new HelpFormatter();
@@ -75,7 +77,7 @@ public class CompilerTester {
             numRegs = 24;
         }
 
-        
+
         Compiler c = new Compiler(s, numRegs);
         ast.AST ast = c.genAST();
 
@@ -97,7 +99,7 @@ public class CompilerTester {
 
         if (cmd.hasOption("ast")) {
             String filename = cmd.hasOption("onefile") ? "ast.dot" : sourceFile.substring(0, sourceFile.lastIndexOf('.')) + "_ast.dot";
-            try (PrintStream out = new PrintStream(graphDir+File.pathSeparator+filename)) {               
+            try (PrintStream out = new PrintStream(graphDir+File.pathSeparator+filename)) {
                 out.print(ast.asDotGraph());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -136,12 +138,19 @@ public class CompilerTester {
         }
 
         // Comment these out for PA 7 - 8 - 9
-        // String[] optArgs = cmd.getOptionValues("opt");
-        // List<String> optArguments = (optArgs!=null && optArgs.length != 0) ? Arrays.asList(optArgs) : new ArrayList<String>();
+        String[] optArgs = cmd.getOptionValues("opt");
+        List<String> optArguments = (optArgs!=null && optArgs.length != 0) ? Arrays.asList(optArgs) : new ArrayList<String>();
 
-        // //PA 7
-        // c.optimization(optArguments,options);
-        
+        //PA 7
+        try {
+            dotgraph_text = c.optimization(optArguments, cmd);
+            System.out.println(dotgraph_text);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error caught - see stderr for stack trace " + e.getMessage());
+            System.exit(-6);
+        }
+
         // //PA 8
         // c.regAlloc(numRegs);
 
