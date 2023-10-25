@@ -2,14 +2,14 @@ package ast;
 
 public class IntegerLiteral extends Expression {
 
-    int val;
+    Integer val;
     
-    public IntegerLiteral(int lineNum, int charPos, int val) {
+    public IntegerLiteral(int lineNum, int charPos, Integer val) {
         super(lineNum, charPos);
         this.val = val;
     }
 
-    public int value() {
+    public Integer value() {
         return val;
     }
 

@@ -1,6 +1,5 @@
 package coco;
 
-import java.util.ArrayList;
 import types.Type;
 
 public class Symbol { 
@@ -23,6 +22,6 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return name + ":" + type;
+        return name + (type != null ? ":" + type : "");
     }
 }

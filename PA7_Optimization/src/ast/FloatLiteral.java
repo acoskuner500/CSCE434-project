@@ -2,14 +2,14 @@ package ast;
 
 public class FloatLiteral extends Expression {
     
-    float val;
+    Float val;
 
-    public FloatLiteral(int lineNum, int charPos, float val) {
+    public FloatLiteral(int lineNum, int charPos, Float val) {
         super(lineNum, charPos);
         this.val = val;
     }
 
-    public float value() {
+    public Float value() {
         return val;
     }
 

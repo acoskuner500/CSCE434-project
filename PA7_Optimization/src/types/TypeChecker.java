@@ -1,6 +1,7 @@
 package types;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import ast.*;
 import coco.Symbol;
@@ -348,6 +349,12 @@ public class TypeChecker implements NodeVisitor {
             TypeList availableParams = ((FuncType) s.type()).parameters();
             if (availableParams.equals(currentArgs)) {
                 prevResult = ((FuncType) s.type()).returnType();
+
+                // Resolve to the correct symbol
+                List<Symbol> resolved = new ArrayList<Symbol>();
+                resolved.add(s);
+                node.resolve(resolved);
+
                 currentArgs = oldList;
                 return;
             }

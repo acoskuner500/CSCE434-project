@@ -8,28 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.cli.*;
+
 import ast.*;
+import ir.IRGenerator;
+import ir.SSA;
 import types.*;
 
-public class Compiler {
-
-    class Pair<K, V> {
-        K first;
-        V second;
-
-        public Pair(K first, V second) {
-            this.first = first;
-            this.second = second;
-        }
-
-        public K getFirst() {
-            return first;
-        }
-
-        public V getSecond() {
-            return second;
-        }
-    }
+public class Compiler { 
 
     // Error Reporting ============================================================
     private StringBuilder errorBuffer = new StringBuilder();
@@ -80,6 +66,10 @@ public class Compiler {
     private List<Integer> instructions;
     private ArrayList<Pair<FunctionCall, Token>> promisedCalls;
 
+    // Saved for any later use
+    AST savedAST;
+    SSA savedSSA;
+
     // Need to map from IDENT to memory offset
 
     public Compiler(Scanner scanner, int numRegs) {
@@ -90,16 +80,28 @@ public class Compiler {
         promisedCalls = new ArrayList<Pair<FunctionCall, Token>>();
     }
 
-    // TODO
     public AST genAST() {
         initSymbolTable();
         try {
-            return new AST(computation());
+            savedAST = new AST(computation());
         } catch (QuitParseException q) {
             errorBuffer.append("SyntaxError(" + lineNumber() + "," + charPosition() + ")");
             errorBuffer.append("[Could not complete parsing.]");
-            return new AST(null);
+            savedAST = new AST(null);
         }
+        return savedAST;
+    }
+
+    public SSA genSSA(AST ast) {
+        IRGenerator irGen = new IRGenerator();
+        ast.getRoot().accept(irGen);
+        savedSSA = new SSA(irGen.functions());
+        return savedSSA;
+    }
+
+    public String optimization(List<String> optArgs, CommandLine cmd) {
+        savedSSA.resetVisited();
+        return savedSSA.asDotGraph();
     }
 
     public int[] compile() {
@@ -365,8 +367,8 @@ public class Compiler {
 
         // After end of program, check to see if any unresolved function calls
         for (Pair<FunctionCall, Token> deferredCall : promisedCalls) {
-            FunctionCall old = deferredCall.getFirst();
-            old.resolve(tryResolveVariable(deferredCall.getSecond(), false));
+            FunctionCall old = deferredCall.first;
+            old.resolve(tryResolveVariable(deferredCall.second, false));
         }
 
         return new Computation(first.lineNumber(), first.charPosition(), main, vars, funcs, stmts);

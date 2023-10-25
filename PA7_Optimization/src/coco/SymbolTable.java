@@ -3,8 +3,8 @@ package coco;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 import java.util.HashMap;
-import coco.Symbol;
 import types.*;
 
 public class SymbolTable {
@@ -13,6 +13,13 @@ public class SymbolTable {
     // Each symbol table is represented as a hash table
     Stack<HashMap<String, List<Symbol>>> scopedTables;
 
+    // Reserved symbols
+    public final static Symbol readIntSymbol = new Symbol("readInt", new FuncType(new TypeList(), new IntType()));
+    public final static Symbol readBoolSymbol = new Symbol("readBool", new FuncType(new TypeList(), new BoolType()));
+    public final static Symbol printIntSymbol = new Symbol("printInt", new FuncType(new TypeList(Arrays.asList(new IntType())), new VoidType()));
+    public final static Symbol printBoolSymbol = new Symbol("printInt", new FuncType(new TypeList(Arrays.asList(new BoolType())), new VoidType()));
+    public final static Symbol printlnSymbol = new Symbol("println", new FuncType(new TypeList(), new VoidType()));
+
     public SymbolTable () {
         // Initialize the scope stack
         scopedTables = new Stack<HashMap<String, List<Symbol>>>();
@@ -20,32 +27,24 @@ public class SymbolTable {
         // Initialize the global scope with predefined functions
         HashMap<String, List<Symbol>> globalScope = new HashMap<String, List<Symbol>>();
         ArrayList<Symbol> overloads = new ArrayList<Symbol>();
-        overloads.add(new Symbol("readInt", new FuncType(new TypeList(), new IntType())));
+        overloads.add(readIntSymbol);
         globalScope.put("readInt", overloads);
 
         overloads = new ArrayList<Symbol>();
-        overloads.add(new Symbol("readBool", new FuncType(new TypeList(), new BoolType())));
+        overloads.add(readBoolSymbol);
         globalScope.put("readBool", overloads);
 
-        ArrayList<Type> params = new ArrayList<Type>();
-        params.add(new IntType());
         overloads = new ArrayList<Symbol>();
-        overloads.add(new Symbol("printInt", new FuncType(new TypeList(params), new VoidType())));
+        overloads.add(printIntSymbol);
         globalScope.put("printInt", overloads);
 
-        params = new ArrayList<Type>();
-        params.add(new BoolType());
         overloads = new ArrayList<Symbol>();
-        overloads.add(new Symbol("printBool", new FuncType(new TypeList(params), new VoidType())));
+        overloads.add(printBoolSymbol);
         globalScope.put("printBool", overloads);
 
         overloads = new ArrayList<Symbol>();
-        overloads.add(new Symbol("println", new FuncType(new TypeList(), new VoidType())));
+        overloads.add(printlnSymbol);
         globalScope.put("println", overloads);
-
-        params = new ArrayList<Type>();
-        ArrayList<Integer> arr = new ArrayList<Integer>();
-        arr.add(null);
 
         // Add the global scope to the scope stack
         scopedTables.push(globalScope);

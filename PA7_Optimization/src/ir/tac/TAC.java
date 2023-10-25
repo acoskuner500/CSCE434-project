@@ -12,4 +12,8 @@ public abstract class TAC implements Visitable{
 
         // saving code position will be helpful in debugging
     } 
+
+    protected int getID() {
+        return id;
+    }
 }

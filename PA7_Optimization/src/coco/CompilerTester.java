@@ -80,6 +80,12 @@ public class CompilerTester {
 
         Compiler c = new Compiler(s, numRegs);
         ast.AST ast = c.genAST();
+        
+        // Check for AST errors
+        if (ast.getRoot() == null) {
+            System.out.println(c.errorReport());
+            return;
+        }
 
         String ast_text = ast.printPreOrder();
         if (cmd.hasOption("astOut")) {
