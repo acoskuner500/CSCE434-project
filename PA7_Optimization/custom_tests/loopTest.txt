@@ -1,0 +1,19 @@
+main
+
+int a, b, c;
+
+{
+    a = 3;
+    b = 7;
+    c = 4;
+
+    if (a < b) then
+        c = a + 3;     
+    else
+        b = c - 2;
+    fi;
+
+    while (a - c > b) do
+        call printInt(a);
+    od;
+}.

@@ -1,0 +1,15 @@
+main
+
+int i, j, k;
+
+{
+    i = 1;
+    j = 2;
+    k = 3;
+
+    repeat
+        call printInt(i);
+    until (k > j);
+
+    call printInt(j);
+}.

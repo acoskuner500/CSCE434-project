@@ -1,0 +1,18 @@
+main
+int [ 5 ][ 10 ][ 15 ] a;
+int b, c, d;
+
+function foo( ) : int
+{
+	return 10;
+};
+
+{
+	b = 1;
+	c = 19;
+	a[ 4 ][ 9 ][ 1 + call foo( ) ] = 45;
+	d = a[ 4 ][ 9 ][ call foo( ) + 1 ] + 2;
+	
+	call printInt(a[ 4 ][ 9 ][ 1 + call foo( ) ]);
+}
+.

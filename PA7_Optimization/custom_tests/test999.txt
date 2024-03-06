@@ -1,0 +1,18 @@
+main
+int i, j;
+{
+   i = 0;
+   j = 0;
+   repeat
+      j = j + 1;
+      i = i + 2;
+
+      if (j + 4 < j - i) then
+         j++;
+      fi;
+
+   until (i >= 1000);
+   call printInt(j);
+   call printInt(i);
+}
+.

@@ -2,17 +2,26 @@ package ir.tac;
 
 public class Move extends Assign {
     
-    public Move(int id, Variable dest, Value left, Value right) {
-        super(id, dest, left, right);
+    public Move(int id, Variable dest, Value source) {
+        super(id, dest, source, null);
+    }
+
+    public Move(Move other) {
+        super(other);
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Move");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("MOVE");
+        return getString(null);
+    }
+
+    @Override
+    public TAC clone() {
+        return new Move(this);
     }
 }

@@ -8,12 +8,11 @@ import ir.tac.Call;
 // To print basic block in Dot language
 public class CFGPrinter implements CFGVisitor {
 
-    HashMap<String, Integer> funcOccurences = new HashMap<String, Integer>();
     String outStr = "";
     int count = 0;
 
     public String printDotGraph(BasicBlock start) {
-        visit(start);
+        start.accept(this);
         String ret = outStr;
         outStr = "";
         return ret;
@@ -28,13 +27,10 @@ public class CFGPrinter implements CFGVisitor {
         for (TAC tac : block) {
             if (tac instanceof Call) {
                 Call c = (Call) tac;
-                if (funcOccurences.containsKey(c.function().name())) {
-                    funcOccurences.put(c.function().name(), funcOccurences.get(c.function().name()));
-                } else {
-                    funcOccurences.put(c.function().name(), 0);
+                outStr += "<" + c.function().name() + "_" + tac.getID() + ">";
+                if (c.functionCFG() != null) {
+                    callLabels.put(c.function().name() + "_" + tac.getID(), c.functionCFG().start());
                 }
-                outStr += "<" + c.function().name() + funcOccurences.get(c.function().name()) + ">";
-                callLabels.put(c.function().name() + funcOccurences.get(c.function().name()), c.functionBlock());
             }
 
             outStr += tac + " |";
@@ -49,7 +45,7 @@ public class CFGPrinter implements CFGVisitor {
         // Get labels (need to actually add the text)
         for (Successor s : block.getSuccessors()) {
             BasicBlock dest = s.destination();
-            outStr += "BB" + block.blockNumber() + ":s -> BB" + dest.blockNumber() + ":" + s.arrowType() + " [label=\"" + s.label() + "\"];\n";
+            outStr += "BB" + (block.blockNumber() >= 0 ? block.blockNumber() : "_" + block.blockNumber() * -1) + ":s -> BB" + dest.blockNumber() + ":" + s.arrowType() + " [label=\"" + s.label() + "\"];\n";
         }
         // Visit successors
         for (Successor s : block.getSuccessors()) {

@@ -1,25 +1,27 @@
 package ir.tac;
 
-public class Write extends TAC {
+public class Write extends Print {
 
-    private Value arg;
-   
     public Write(int id, Value arg) {
-        super(id);
-        this.arg = arg;
+        super(id, arg);
     }
 
-    public Value argument() {
-        return arg;
+    public Write(Write other) {
+        super(other);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : WRITE " + arg;
+        return super.getString("WRITE");
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Write");
+        visitor.visit(this);
+    }
+
+    @Override
+    public TAC clone() {
+        return new Write(this);
     }
 }

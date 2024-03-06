@@ -1,25 +1,27 @@
 package ir.tac;
 
-public class ReadB extends TAC {
+public class ReadB extends Input {
     
-    private Variable dest;
-
     public ReadB(int id, Variable dest) {
-        super(id);
-        this.dest = dest;
+        super(id, dest);
     }
 
-    public Variable destination() {
-        return dest;
+    public ReadB(ReadB other) {
+        super(other);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : READB";
+        return super.getString("READB");
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for ReadB");
+        visitor.visit(this);
+    }
+
+    @Override
+    public TAC clone() {
+        return new ReadB(this);
     }
 }

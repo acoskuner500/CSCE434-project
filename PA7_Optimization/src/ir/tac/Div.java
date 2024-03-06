@@ -6,13 +6,22 @@ public class Div extends Assign {
         super(id, dest, left, right);
     }
 
+    public Div(Div other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Div");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("DIV");
+        return getString("/");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Div(this);
     }
 }

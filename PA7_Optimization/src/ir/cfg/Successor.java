@@ -37,4 +37,8 @@ public class Successor {
     public String arrowType() {
         return arrowType;
     }
+
+    public void setLabel(String newLabel) {
+        label = newLabel;
+    }
 }

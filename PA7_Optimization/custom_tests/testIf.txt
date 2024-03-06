@@ -1,0 +1,24 @@
+main
+
+int a, b, c, d;
+
+{
+    a = call readInt();
+    b = call readInt();
+    c = call readInt();
+    d = call readInt();
+
+    if (a < b) then
+        if (c < d) then
+            call printInt(a);
+        else
+            call printInt(b);
+        fi;
+    else
+        if (c < d) then
+            call printInt(c);
+        else
+            call printInt(d);
+        fi;
+    fi;
+}.

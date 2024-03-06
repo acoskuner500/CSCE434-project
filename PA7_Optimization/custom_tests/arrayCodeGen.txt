@@ -1,0 +1,19 @@
+main
+
+int a, b, c;
+int[10] arr;
+
+{
+    a = 4;
+    b = 2;
+    c = 9;
+
+    arr[0] = 8;
+    call printInt(arr[0]);
+
+    arr[1] = b;
+    call printInt(arr[1]);
+
+    arr[2] = arr[0] + 5;
+    call printInt(arr[2]);
+}.

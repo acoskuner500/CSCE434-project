@@ -1,153 +1,40 @@
 package ir.tac;
 
-import ast.*;
+public interface TACVisitor {
+    
+    public void visit(Add instr);
+    public void visit(Adda instr);
+    public void visit(And instr);
+    public void visit(Cmp instr);
+    public void visit(Div instr);
+    public void visit(Lsh instr);
+    public void visit(Mod instr);
+    public void visit(Move instr);
+    public void visit(Mul instr);
+    public void visit(Or instr);
+    public void visit(Pow instr);
+    public void visit(Sub instr);
+    public void visit(Xor instr);
 
-public class TACVisitor implements NodeVisitor {
+    public void visit(Beq instr);
+    public void visit(Bge instr);
+    public void visit(Bgt instr);
+    public void visit(Ble instr);
+    public void visit(Blt instr);
+    public void visit(Bne instr);
 
-    Node prev;
+    public void visit(Bra instr);
+    public void visit(Call instr);
+    public void visit(Return instr);
 
-    @Override
-    public void visit (BoolLiteral node) {
+    public void visit(Load instr);
+    public void visit(Store instr);
 
-    }
+    public void visit(Read instr);
+    public void visit(ReadB instr);
 
-    @Override
-    public void visit (IntegerLiteral node) {
+    public void visit(Write instr);
+    public void visit(WriteB instr);
+    public void visit(WriteNL instr);
 
-    }
-
-    @Override
-    public void visit (FloatLiteral node) {
-
-    }
-
-    @Override
-    public void visit (AddressOf node) {
-
-    }
-
-    @Override
-    public void visit (ArrayIndex node) {
-
-    }
-
-    @Override
-    public void visit (Dereference node) {
-
-    }
-
-    @Override
-    public void visit (LogicalNot node) {
-
-    }
-
-    @Override
-    public void visit (Power node) {
-
-    }
-
-    @Override
-    public void visit (Multiplication node) {
-
-    }
-
-    @Override
-    public void visit (Division node) {
-
-    }
-
-    @Override
-    public void visit (Modulo node) {
-
-    }
-
-    @Override
-    public void visit (LogicalAnd node) {
-
-    }
-
-    @Override
-    public void visit (Addition node) {
-
-    }
-
-    @Override
-    public void visit (Subtraction node) {
-
-    }
-
-    @Override
-    public void visit (LogicalOr node) {
-
-    }
-
-    @Override
-    public void visit (Relation node) {
-
-    }
-
-    @Override
-    public void visit (Assignment node) {
-
-    }
-
-    @Override
-    public void visit (ArgumentList node) {
-
-    }
-
-    @Override
-    public void visit (FunctionCall node) {
-        
-    }
-
-    @Override
-    public void visit (IfStatement node) {
-
-    }
-
-    @Override
-    public void visit (WhileStatement node) {
-
-    }
-
-    @Override
-    public void visit (RepeatStatement node) {
-
-    }
-
-    @Override
-    public void visit (ReturnStatement node) {
-
-    }
-
-    @Override
-    public void visit (StatementSequence node) {
-
-    }
-
-    @Override
-    public void visit (VariableDeclaration node) {
-
-    }
-
-    @Override
-    public void visit (FunctionBody node) {
-
-    }
-
-    @Override
-    public void visit (FunctionDeclaration node) {
-
-    }
-
-    @Override
-    public void visit (DeclarationList node) {
-
-    }
-
-    @Override
-    public void visit (Computation node) {
-
-    }
 }

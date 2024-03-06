@@ -1,0 +1,33 @@
+main
+
+bool x, y, z;
+
+{
+    x = true and false;
+    y = true or false;
+    z = not false;
+
+    if (x) then
+        call printInt(5);
+    fi;
+
+    if (x and y) then
+        call printInt(7);
+    fi;
+
+    if (y or z) then
+        call printInt(12);
+    fi;
+
+    if (not z) then
+        call printInt(4);
+    fi;
+
+    if ((6 > 4) and (7 < 3)) then
+        call printInt(3);
+    fi;
+
+    if ((not (4 == 3)) or (4 >= 3)) then
+        call printInt(9);
+    fi;
+}.

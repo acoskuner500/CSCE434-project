@@ -6,13 +6,22 @@ public class Mod extends Assign {
         super(id, dest, left, right);
     }
 
+    public Mod(Mod other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Mod");
+        visitor.visit(this);
     }    
 
     @Override
     public String toString() {
-        return getString("MOD");
+        return getString("%");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Mod(this);
     }
 }

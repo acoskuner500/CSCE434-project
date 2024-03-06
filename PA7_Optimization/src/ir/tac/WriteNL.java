@@ -1,18 +1,27 @@
 package ir.tac;
 
-public class WriteNL extends TAC {
+public class WriteNL extends Print {
 
     public WriteNL(int id) {
-        super(id);
+        super(id, null);
+    }
+
+    public WriteNL(WriteNL other) {
+        super(other);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : WriteNL";
+        return super.getString("WriteNL");
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for WriteNL");
+        visitor.visit(this);
+    }
+
+    @Override
+    public TAC clone() {
+        return new WriteNL(this);
     }
 }

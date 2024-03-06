@@ -6,13 +6,22 @@ public class Mul extends Assign {
         super(id, dest, left, right);
     }
 
+    public Mul(Mul other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Mul");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("MUL");
+        return getString("*");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Mul(this);
     }
 }

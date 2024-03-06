@@ -2,13 +2,19 @@ package ir.tac;
 
 public class Store extends TAC {
     
-    private Variable loc;
     private Value val;
+    private Variable loc;
 
-    public Store(int id, Variable loc, Value val) {
+    public Store(int id, Value val, Variable loc) {
         super(id);
-        this.loc = loc;
         this.val = val;
+        this.loc = loc;
+    }
+
+    public Store(Store other) {
+        super(other);
+        this.val = other.val;
+        this.loc = other.loc;
     }
 
     public Variable location() {
@@ -19,13 +25,22 @@ public class Store extends TAC {
         return val;
     }
 
+    public void setValue(Value newVal) {
+        val = newVal;
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Store");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : STORE " + val + " " + loc;
+        return (super.isEliminated() ? "eliminated-" : "") + super.getID() + " : STORE " + val + " " + loc;
+    }
+
+    @Override
+    public TAC clone() {
+        return new Store(this);
     }
 }

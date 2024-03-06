@@ -1,0 +1,18 @@
+main
+
+int x, y, z, a;
+
+{
+    x = 4;
+    y = 7;
+    z = 3;
+    a = y;
+
+    while (z < x) do
+        call printInt(x);
+        z = 6;
+        call printInt(a);
+    od;
+
+    call printInt(y);
+}.

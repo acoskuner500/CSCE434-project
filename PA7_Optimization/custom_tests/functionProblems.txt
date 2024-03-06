@@ -1,0 +1,70 @@
+main
+int x, y, z;
+
+function badIf(): void {
+    x = 4;
+    y = 7;
+    z = 3;
+
+    if (x > 7) then
+        if (y < 2) then
+            call printInt(x);
+        fi;
+        if (y > 0) then
+            call printInt(4 + 6);
+        else
+            x = y + 2;
+            call printInt(x);
+        fi;
+    else
+        x = y + 3;
+    fi;
+};
+
+function badWhile(): void {
+    x = 4;
+    y = 7;
+    z = 3;
+
+    while (x < 20) do
+        x++;
+
+        while (y > 3) do
+            y--;
+        od;
+
+        while (z <= 12) do
+            z++;
+        od;
+    od;
+};
+
+function badRepeat(): void {
+    x = 4;
+    y = 10;
+    z = -2;
+
+    repeat
+        x++;
+        y = x + z;
+
+        repeat
+            z = 4;
+            if (y > 4) then
+                x = 7;
+            fi;
+        until (z == 4);
+
+        z--;
+
+        repeat
+            x++;
+        until (x < 20);
+    until (y < 30);
+};
+
+{
+    call badIf();
+    call badWhile();
+    call badRepeat();
+}.

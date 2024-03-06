@@ -1,0 +1,14 @@
+main
+
+int i, j;
+
+function output(): void {
+    call printInt(i);
+    call printInt(j);
+};
+
+{
+    i = 1;
+    j = 3;
+    call output();
+}.

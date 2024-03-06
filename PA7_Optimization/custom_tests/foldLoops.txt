@@ -1,0 +1,19 @@
+main
+
+int i, j, k;
+
+{
+    i = 7;
+    j = 3;
+    k = 9;
+
+    while (j < k) do
+        while (i > j) do
+            call printInt(j);
+        od;
+        call printInt(k);
+    od;
+    while (i == j) do
+        call printInt(i);
+    od;
+}.

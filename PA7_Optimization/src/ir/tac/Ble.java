@@ -1,24 +1,28 @@
 package ir.tac;
 import ir.cfg.BasicBlock;
 
-public class Ble extends TAC {
+public class Ble extends Jump {
 
-    private Value comp;
-    private BasicBlock jump;
-    
-    public Ble(int id, Value comp, BasicBlock jump) {
-        super(id);
-        this.comp = comp;
-        this.jump = jump;
+    public Ble(int id, Value comp, BasicBlock jump, JumpType jType) {
+        super(id, comp, jump, jType);
+    }
+
+    public Ble(Ble other) {
+        super(other);
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Ble");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : BLE " + comp + " [" + jump.blockNumber() + "]";
+        return super.getString("BLE");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Ble(this);
     }
 }

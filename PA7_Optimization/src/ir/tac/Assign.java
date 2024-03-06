@@ -13,27 +13,38 @@ public abstract class Assign extends TAC {
         this.right = right;
     }
 
+    protected Assign(Assign other) {
+        super(other);
+        this.dest = other.dest;
+        this.left = other.left;
+        this.right = other.right;
+    }
+
     public void setDestination(Variable dest) {
         this.dest = dest;
     }
 
-    protected int getID() {
-        return super.getID();
-    }
-
-    protected Variable destination() {
+    public Variable destination() {
         return dest;
     }
 
-    protected Value leftOperand() {
+    public Value leftOperand() {
         return left;
     }
 
-    protected Value rightOperand() {
+    public Value rightOperand() {
         return right;
     }
 
+    public void setLeftOperand(Value newLeft) {
+        left = newLeft;
+    }
+
+    public void setRightOperand(Value newRight) {
+        right = newRight;
+    }
+
     protected String getString(String op) {
-        return super.getID() + " : " + op + " " + left + " " + (right != null ? right : "");
+        return (super.isEliminated() ? "eliminated-" : "") + super.getID() + " : " + dest + " := " + left + " " + (right != null ? op + " " + right : "");
     }
 }

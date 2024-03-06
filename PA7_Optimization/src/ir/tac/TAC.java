@@ -12,8 +12,23 @@ public abstract class TAC implements Visitable{
 
         // saving code position will be helpful in debugging
     } 
+    
+    protected TAC(TAC other) {
+       this.id = other.id;
+       this.eliminated = other.eliminated; 
+    }
 
-    protected int getID() {
+    public int getID() {
         return id;
     }
+
+    public void eliminate() {
+        eliminated = true;
+    }
+
+    public boolean isEliminated() {
+        return eliminated;
+    }
+
+    public abstract TAC clone();
 }

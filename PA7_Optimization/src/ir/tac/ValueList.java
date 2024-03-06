@@ -1,8 +1,9 @@
 package ir.tac;
 
 import java.util.List;
+import java.util.Iterator;
 
-public class ValueList implements Visitable {
+public class ValueList implements Visitable, Iterable<Value> {
    
     List<Value> vals;
 
@@ -12,6 +13,11 @@ public class ValueList implements Visitable {
 
     public List<Value> values() {
         return vals;
+    }
+
+    @Override
+    public Iterator<Value> iterator() {
+        return vals.iterator();
     }
 
     @Override

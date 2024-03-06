@@ -1,7 +1,7 @@
 JC := javac
 SRC_DIR := ./src
 DEPS := ../lib/commons-cli-1.5.0.jar
-TESTS_DIR := ../../engr-cse-compiler-design-f23/PA5
+TESTS_DIR := ../engr-cse-compiler-design-f23/PA5
 # For a different testfile, use TEST=testXXX as CLI argument
 TEST ?= test000
 SRC_FILE := $(TEST).txt

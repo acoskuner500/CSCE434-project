@@ -6,13 +6,22 @@ public class Add extends Assign {
         super(id, dest, left, right);
     }
 
+    public Add(Add other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Add");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("ADD");
+        return getString("+");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Add(this);
     }
 }

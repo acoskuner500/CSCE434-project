@@ -1,0 +1,23 @@
+main
+
+int x, y;
+
+{
+    x = 4;
+    y = 7;
+
+    if (x > 7) then
+        if (y < 2) then
+            call printInt(x);
+        fi;
+        if (y > 0) then
+            call printInt(4 + 6);
+        else
+            x = y + 2;
+            call printInt(x);
+        fi;
+    else
+        x = y + 3;
+    fi;
+}
+.

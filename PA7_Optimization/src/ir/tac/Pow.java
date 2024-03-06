@@ -6,13 +6,22 @@ public class Pow extends Assign {
         super(id, dest, left, right);
     }
 
+    public Pow(Pow other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Pow");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("POW");
+        return getString("^");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Pow(this);
     }
 }

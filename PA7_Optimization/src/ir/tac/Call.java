@@ -1,19 +1,37 @@
 package ir.tac;
 
 import coco.Symbol;
-import ir.cfg.BasicBlock;
+import ir.cfg.CFG;
 
 public class Call extends TAC {
     
     private Symbol function;
     private ValueList args;
-    private BasicBlock ref;
+    private CFG ref;
+    private Variable dest;
 
-    public Call(int id, Symbol function, ValueList args, BasicBlock ref) {
+    public Call(int id, Symbol function, ValueList args, CFG ref) {
         super(id);
         this.function = function;
         this.args = args;
         this.ref = ref;
+        this.dest = null;
+    }
+
+    public Call(int id, Symbol function, ValueList args, CFG ref, Variable dest) {
+        super(id);
+        this.function = function;
+        this.args = args;
+        this.ref = ref;
+        this.dest = dest;
+    }
+
+    public Call(Call other) {
+        super(other);
+        this.function = other.function();
+        this.args = other.args;
+        this.ref = other.ref;
+        this.dest = other.dest;
     }
 
     public Symbol function() {
@@ -24,24 +42,45 @@ public class Call extends TAC {
         return args;
     }
 
-    public BasicBlock functionBlock() {
+    public CFG functionCFG() {
         return ref;
+    }
+
+    public Variable destination() {
+        return dest;
+    }
+
+    public void setFunctionCFG(CFG funcCFG) {
+        ref = funcCFG;
+    }
+
+    public void setDestination(Variable dest) {
+        this.dest = dest;
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Call");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        String out = super.getID() + " : CALL ";
+        String out = (super.isEliminated() ? "eliminated-" : "") + super.getID() + " : " + (dest != null ? dest + " = " : "" ) + "CALL " + function.name() + "(";
 
-        for (Value v : args.values()) {
-            out += v + " ";
+        for (int i = 0; i < args.values().size(); i++) {
+            out += args.values().get(i);
+
+            if (i < args.values().size() - 1) {
+                out += ", ";
+            }
         }
 
-        out += function.name();
+        out += ")";
         return out;
+    }
+
+    @Override
+    public TAC clone() {
+        return new Call(this);
     }
 }

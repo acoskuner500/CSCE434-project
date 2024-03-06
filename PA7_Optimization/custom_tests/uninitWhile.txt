@@ -1,0 +1,7 @@
+main
+
+{
+    while (4 < 3) do
+        call printInt(7);
+    od;
+}.

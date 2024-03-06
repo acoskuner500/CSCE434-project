@@ -11,13 +11,31 @@ public class Bra extends TAC {
         this.jump = jump;
     }
 
+    public Bra(Bra other) {
+        super(other);
+        this.jump = other.jump;
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Bra");
+        visitor.visit(this);
+    }
+
+    public BasicBlock jumpDestination() {
+        return jump;
+    }
+
+    public void setJump(BasicBlock newJump) {
+        jump = newJump;
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : BRA [" + jump.blockNumber() + "]";
+        return (super.isEliminated() ? "eliminated-" : "") + super.getID() + " : BRA [" + jump.blockNumber() + "]";
+    }
+
+    @Override
+    public TAC clone() {
+        return new Bra(this);
     }
 }

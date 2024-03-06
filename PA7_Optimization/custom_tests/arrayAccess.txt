@@ -1,0 +1,19 @@
+main
+int i, j, k, w, z, x, y;
+int[ 8 ] a, b;
+{
+	i = 1;
+	a[1] = 5;
+	x = a[ i ];
+	k = a[ i ];
+	j = 2;
+	b[j] = 19;
+	while (a[ i ] < b[ j ]) do
+		k = a[i] + a[i];
+		a[i] = k + 1;
+		z = a[i];
+		call printInt(z);
+	od; 
+	w = a[ i ];
+	call printInt(w);
+}.

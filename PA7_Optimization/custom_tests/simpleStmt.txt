@@ -1,0 +1,12 @@
+//Simple parsing test
+main 
+int a,b,c,d;
+{
+    a = b+c+d; 
+    b = a*a+b*b;
+    a = 5+2*b;
+    a = 2*c+d;
+    a = a+c*b+d; 
+    d = 5 + 2 * 10 + 2;
+    call printInt(a);
+}.

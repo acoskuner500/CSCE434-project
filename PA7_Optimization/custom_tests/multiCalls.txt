@@ -1,0 +1,65 @@
+main
+int x, y;
+
+function foo( ) : void
+{
+	int a, b;
+
+	a = 1;
+	b = 2;
+	x = a;
+	y = b;
+	call printInt(a);
+	call printInt(b);
+	call printInt(x);
+	call printInt(y);
+};
+
+function bar( int a ) : void
+{
+	int b, c;
+
+	b = 1;
+	c = 1;
+	y = b;
+	call printInt(a);
+	call printInt(b);
+	call printInt(c);
+	call printInt(y);
+};
+
+function baz( int a, int b ) : void
+{
+	int c, d;
+	
+	c = 1;
+	call printInt(a);
+	call printInt(b);
+	call printInt(x);
+	call printInt(y);
+};
+
+function boo( int a, int b) : int
+{
+	int i;
+
+	i = 0;
+	while (i < 5) do
+		x = x * x;
+		i = i + 1;
+	od;
+	return x + 4;
+};
+
+{
+	call foo( );
+	call bar( 1 );
+	x = 3 + 7 - 2;
+	y = ( 895 * 2 * 2 ) / 2;
+	call baz( x, y );
+	y = y + call boo( 2, 4 );
+	
+	call printInt(x);
+	call printInt(y);
+}
+.

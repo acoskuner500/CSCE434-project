@@ -13,13 +13,16 @@ public class Literal implements Value {
         this.val = val;
     }
 
-    public Expression value() {
-        return val;
+    public int value() {
+        if (val instanceof IntegerLiteral) {
+            return ((IntegerLiteral) val).value();
+        } else {
+            return ((BoolLiteral) val).value() ? 1 : 0;
+        }
     }
 
     @Override
     public void accept(TACVisitor visitor) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'accept' for Literal");
     }
     

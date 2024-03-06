@@ -1,0 +1,25 @@
+main
+int x, y, z;
+{
+    x = 4;
+    y = 10;
+    z = -2;
+
+    repeat
+        x++;
+        y = x + z;
+
+        repeat
+            z = 4;
+            if (y > 4) then
+                x = 7;
+            fi;
+        until (z == 4);
+
+        z--;
+
+        repeat
+            x++;
+        until (x < 20);
+    until (y < 30);
+}.

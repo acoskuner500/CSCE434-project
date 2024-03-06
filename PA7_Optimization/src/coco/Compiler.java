@@ -1,8 +1,7 @@
 package coco;
 
 import java.util.ArrayList;
-import java.util.Stack;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +10,14 @@ import java.util.NoSuchElementException;
 import org.apache.commons.cli.*;
 
 import ast.*;
-import ir.IRGenerator;
-import ir.SSA;
+import ir.*;
+import ir.cfg.*;
 import types.*;
+import ir.optimizations.*;
+import ir.tac.TAC;
+import ir.tac.Move;
+import ir.tac.Variable;
+import ir.tac.Literal;
 
 public class Compiler { 
 
@@ -65,11 +69,15 @@ public class Compiler {
     private int numDataRegisters; // available registers are [1..numDataRegisters]
     private List<Integer> instructions;
     private ArrayList<Pair<FunctionCall, Token>> promisedCalls;
+    private boolean isGlobal;
+    private List<Symbol> globals;
 
     // Saved for any later use
-    AST savedAST;
-    SSA savedSSA;
+    private AST savedAST;
+    private SSA savedSSA;
 
+    // Register allocations
+    private HashMap<Variable, Integer> regAllocs;
     // Need to map from IDENT to memory offset
 
     public Compiler(Scanner scanner, int numRegs) {
@@ -78,6 +86,7 @@ public class Compiler {
         numDataRegisters = numRegs;
         instructions = new ArrayList<>();
         promisedCalls = new ArrayList<Pair<FunctionCall, Token>>();
+        globals = new ArrayList<Symbol>();
     }
 
     public AST genAST() {
@@ -94,14 +103,183 @@ public class Compiler {
 
     public SSA genSSA(AST ast) {
         IRGenerator irGen = new IRGenerator();
-        ast.getRoot().accept(irGen);
-        savedSSA = new SSA(irGen.functions());
+        savedSSA = irGen.generateIR(ast);
         return savedSSA;
     }
 
     public String optimization(List<String> optArgs, CommandLine cmd) {
         savedSSA.resetVisited();
+
+        boolean noChanges;
+        Propagation propOp;
+        ConstantFolding cfOp;
+        DeadCodeElimination dceOp;
+
+        // Look for the use of uninitialized variables
+        LiveVarsGenerator lvg = new LiveVarsGenerator();
+        for (CFG cfg : savedSSA) {
+            lvg.generate(cfg);
+        }
+
+        // If there are global variables live at the start of main, they are uninitialized
+        CFG mainCFG = savedSSA.CFGs().get(savedSSA.CFGs().size() - 1);
+        int currID = -1;
+        BasicBlock start = mainCFG.start();
+        int currBlockID = savedSSA.lastBlockNumber();
+        for (Symbol s : mainCFG.start().getEntryLiveSet()) {
+            // Array types can be uninitialized
+            if (s.isGlobalVariable() && !(s.type() instanceof ArrayType)) {
+                // Issue warning
+                System.out.println("[WARNING]: " + s + " is uninitialized");
+
+                // If start is loop, need to create predecessor block
+                if (!start.getPredecessors().isEmpty()) {
+                    BasicBlock oldStart = start;
+                    start = new BasicBlock(currBlockID++);
+                    start.addSuccessor(oldStart);
+                    oldStart.addPredecessor(start);
+                    mainCFG.setStart(start);
+                    start.setFunction(oldStart.functionName());
+                    oldStart.setFunction(null);
+                }
+                
+                // Add initialization at start of main
+                List<TAC> instr = mainCFG.start().getInstructions();
+                Variable dest = new Variable(s);
+                Literal defaultVal = null;
+                
+                if (s.type() instanceof IntType) {
+                    defaultVal = new Literal(new IntegerLiteral(0));
+                } else {
+                    defaultVal = new Literal(new BoolLiteral(false));
+                }
+                
+                instr.add(0, new Move(currID--, dest, defaultVal));
+            }
+        }
+
+        // If there are any local variables live at the start of functions, they are uninitialized
+        for (int i = 0; i < savedSSA.CFGs().size() - 1; i++) {
+            CFG cfg = savedSSA.CFGs().get(i);
+            start = cfg.start();
+            for (Symbol s : cfg.start().getEntryLiveSet()) {
+                if (s.isLocal() && !(s.type() instanceof ArrayType)) {
+                    // Issue warning
+                    System.out.println("[WARNING]: " + s + " is uninitialized");
+
+                    // If start is loop, need to create predecessor block
+                    if (!start.getPredecessors().isEmpty()) {
+                        BasicBlock oldStart = start;
+                        start = new BasicBlock(currBlockID--);
+                        start.addSuccessor(oldStart);
+                        oldStart.addPredecessor(start);
+                        cfg.setStart(start);
+                        start.setFunction(oldStart.functionName());
+                        oldStart.setFunction(null);
+                    }
+
+                    // Add initialization at start of function
+                    List<TAC> instr = start.getInstructions();
+                    Variable dest = new Variable(s);
+                    Literal defaultVal = null;
+                
+                    if (s.type() instanceof IntType) {
+                        defaultVal = new Literal(new IntegerLiteral(0));
+                    } else {
+                        defaultVal = new Literal(new BoolLiteral(false));
+                    }
+                    
+                    instr.add(0, new Move(currID--, dest, defaultVal));
+                }
+            }
+        }
+
+        boolean loop = false;
+
+        // Run all available optimizations
+        if (cmd.hasOption("max")) {
+            // If no specific order, use all
+            if (optArgs.isEmpty()) {
+                optArgs = Arrays.asList("cp", "cf", "cpp", "cse", "dce");
+            }
+            loop = true;
+        }
+        
+        do {
+            noChanges = true;
+            for (String optim : optArgs) {
+                switch (optim) {
+                    // Constant Propagation
+                    case "cp":
+                        propOp = new Propagation();
+                        for (CFG cfg : savedSSA) {
+                            if (propOp.optimizeCP(cfg)) {
+                                noChanges = false;
+                            }
+                        }
+                        savedSSA.resetVisited();
+                        break;
+                    // Constant Folding
+                    case "cf":
+                        cfOp = new ConstantFolding();
+                        for (CFG cfg : savedSSA) {
+                            if (cfOp.optimize(cfg)) {
+                                noChanges = false;
+                            }
+                        }
+                        savedSSA.resetVisited();
+                        break;
+                    // Copy Propagation
+                    case "cpp":
+                        propOp = new Propagation();
+                        for (CFG cfg : savedSSA) {
+                            if (propOp.optimizeCPP(cfg)) {
+                                noChanges = false;
+                            }
+                        }
+                        savedSSA.resetVisited();
+                        break;
+                    // Common Subexpression Elimination
+                    case "cse":
+                        break;
+                    // Dead Code Elimination
+                    case "dce":
+                        dceOp = new DeadCodeElimination();
+                        for (CFG cfg : savedSSA) {
+                            if (dceOp.optimize(cfg, globals)) {
+                                noChanges = false;
+                            }
+                        }
+                        savedSSA.resetVisited();
+                        break;
+                }
+            }
+        } while (loop && !noChanges);
+
+        // Reset live sets
+        for (CFG cfg : savedSSA) {
+            cfg.resetLiveSet();
+        }
+
+        // Remove empty blocks
+        CFGCleanup cfgCleaner = new CFGCleanup();
+        cfgCleaner.clean(savedSSA);
+      
         return savedSSA.asDotGraph();
+    }
+
+    public void regAlloc(int numRegs) {
+        // Generate interference graph
+        RegisterAllocator regAlloc = new RegisterAllocator();
+        regAllocs = regAlloc.allocateRegisters(savedSSA, numRegs);
+    }
+
+    public int[] genCode() {
+        // Array of op codes
+        int[] instr;
+        CodeGenerator cGen = new CodeGenerator();
+        instr = cGen.generate(savedSSA, regAllocs, globals);
+        return instr;
     }
 
     public int[] compile() {
@@ -137,7 +315,6 @@ public class Compiler {
         try {
             return symbolTable.lookup(ident.lexeme());
         } catch (SymbolNotFoundError e) {
-            // TODO: Error handling (report error and keep processing)
             if (!funcFirstPass) {
                 reportResolveSymbolError(ident.lexeme(), ident.lineNumber(), ident.charPosition());
             }
@@ -147,20 +324,17 @@ public class Compiler {
 
     private Symbol tryDeclareVariable(Token ident, Type type) {
         try {
-            // If function, signature should include types
-            if (type instanceof FuncType) {
-                String signature = ident.lexeme();
-                FuncType func = (FuncType) type;
-
-                // for (Type p: func.parameters()) {
-                // signature += "_" + p;
-                // }
-
-                return symbolTable.insert(signature, type);
-            }
             return symbolTable.insert(ident.lexeme(), type);
         } catch (RedeclarationError e) {
-            // TODO: Error handling (report error and keep processing)
+            reportDeclareSymbolError(ident.lexeme(), ident.lineNumber(), ident.charPosition());
+            return null;
+        }
+    }
+
+    private Symbol tryDeclareVariable(Token ident, Type type, boolean isGlobal) {
+        try {
+            return symbolTable.insert(ident.lexeme(), type, isGlobal);
+        } catch (RedeclarationError e) {
             reportDeclareSymbolError(ident.lexeme(), ident.lineNumber(), ident.charPosition());
             return null;
         }
@@ -286,10 +460,18 @@ public class Compiler {
 
     // designator = ident { "[" relExpr "]" }
     private Expression designator(boolean isAddress) {
-        int lineNum = lineNumber();
-        int charPos = charPosition();
         Token ident = expectRetrieve(Token.Kind.IDENT);
-        List<Symbol> sym = tryResolveVariable(ident, false);
+        List<Symbol> overloads = tryResolveVariable(ident, false);
+
+        // Try to find the correct symbol
+        Symbol sym = overloads.get(0);
+        for (Symbol s : overloads) {
+            // It can't be a function
+            if (!(s.type() instanceof FuncType)) {
+                sym = s;
+            }
+        }
+
         // Build indices backwards
         ArrayIndex arrIdx = null;
 
@@ -297,7 +479,7 @@ public class Compiler {
             Token start = expectRetrieve(Token.Kind.OPEN_BRACKET);
 
             if (arrIdx == null) {
-                arrIdx = new ArrayIndex(start.lineNumber(), start.charPosition(), sym.get(0), relExpr());
+                arrIdx = new ArrayIndex(start.lineNumber(), start.charPosition(), sym, relExpr());
             } else {
                 arrIdx = new ArrayIndex(start.lineNumber(), start.charPosition(), arrIdx, relExpr());
             }
@@ -309,13 +491,13 @@ public class Compiler {
 
         if (isAddress) {
             if (arrIdx == null) {
-                desig = new AddressOf(ident.lineNumber(), ident.charPosition(), (sym == null) ? null : sym.get(0));
+                desig = new AddressOf(ident.lineNumber(), ident.charPosition(), (sym == null) ? null : sym);
             } else {
                 desig = new AddressOf(ident.lineNumber(), ident.charPosition(), arrIdx);
             }
         } else {
             if (arrIdx == null) {
-                desig = new Dereference(ident.lineNumber(), ident.charPosition(), (sym == null) ? null : sym.get(0));
+                desig = new Dereference(ident.lineNumber(), ident.charPosition(), (sym == null) ? null : sym);
             } else {
                 desig = new Dereference(ident.lineNumber(), ident.charPosition(), arrIdx);
             }
@@ -328,11 +510,12 @@ public class Compiler {
     private Computation computation() {
         Token first = expectRetrieve(Token.Kind.MAIN);
         // Create symbol for main
-        Symbol main = symbolTable.insert("main", new FuncType(new TypeList(), new VoidType()));
+        Symbol main = SymbolTable.mainSymbol;
         ArrayList<Declaration> varDecls = new ArrayList<Declaration>();
         ArrayList<Declaration> funcDecls = new ArrayList<Declaration>();
 
         // Deal with varDecl
+        isGlobal = true;
         while (have(NonTerminal.VAR_DECL)) {
             ArrayList<VariableDeclaration> vDecs = varDecl();
 
@@ -340,6 +523,7 @@ public class Compiler {
                 varDecls.add(vd);
             }
         }
+        isGlobal = false;
 
         // Deal with funcDecl
         while (have(NonTerminal.FUNC_DECL)) {
@@ -371,6 +555,10 @@ public class Compiler {
             old.resolve(tryResolveVariable(deferredCall.second, false));
         }
 
+        if (hasError()) {
+            return null;
+        }
+
         return new Computation(first.lineNumber(), first.charPosition(), main, vars, funcs, stmts);
     }
 
@@ -382,7 +570,12 @@ public class Compiler {
         do {
             Token identTok = expectRetrieve(Token.Kind.IDENT);
             // Add to the symbol table
-            Symbol s = tryDeclareVariable(identTok, t);
+            Symbol s = isGlobal ? tryDeclareVariable(identTok, t, isGlobal) : tryDeclareVariable(identTok, t);
+
+            // Keep track of global declarations for code gen
+            if (isGlobal) {
+                globals.add(s);
+            }
 
             if (s != null) {
                 vars.add(new VariableDeclaration(identTok.lineNumber(),
@@ -400,7 +593,7 @@ public class Compiler {
         Token ident = expectRetrieve(Token.Kind.IDENT);
         // Get list of parameter types
         enterScope();
-        TypeList params = formalParam();
+        List<Symbol> params = formalParam();
         expect(Token.Kind.COLON);
 
         Type retType;
@@ -414,22 +607,24 @@ public class Compiler {
         FunctionBody funcBody = funcBody();
         exitScope();
 
-        Symbol s = tryDeclareVariable(ident, new FuncType(params, retType));
+        TypeList paramTypes = new TypeList();
+        for (Symbol s : params) {
+            paramTypes.append(s.type());
+        }
 
-        return new FunctionDeclaration(first.lineNumber(), first.charPosition(), s, funcBody);
+        Symbol s = tryDeclareVariable(ident, new FuncType(paramTypes, retType));
+
+        return new FunctionDeclaration(first.lineNumber(), first.charPosition(), s, funcBody, params);
     }
 
     // statSeq = statement ";" { statement ";" }
     private StatementSequence statSeq() {
-        // int count = 0;
         ArrayList<Statement> stmts = new ArrayList<Statement>();
         stmts.add(statement());
-        // System.out.println("Added " + (count++) + " statement");
         expect(Token.Kind.SEMICOLON);
 
         while (have(NonTerminal.STATEMENT)) {
             stmts.add(statement());
-            // System.out.println("Added " + (count++) + " statement");
             expect(Token.Kind.SEMICOLON);
         }
 
@@ -455,9 +650,9 @@ public class Compiler {
     }
 
     // formalParam = "(" [ paramDecl { "," paramDecl } ] ")"
-    private TypeList formalParam() {
+    private List<Symbol> formalParam() {
         expect(Token.Kind.OPEN_PAREN);
-        ArrayList<Type> params = new ArrayList<Type>();
+        ArrayList<Symbol> params = new ArrayList<Symbol>();
 
         if (have(NonTerminal.PARAM_DECL)) {
             params.add(paramDecl());
@@ -468,7 +663,7 @@ public class Compiler {
         }
         expect(Token.Kind.CLOSE_PAREN);
 
-        return new TypeList(params);
+        return params;
     }
 
     // funcBody = "{" { varDecl } statSeq "}" ";"
@@ -516,11 +711,10 @@ public class Compiler {
     }
 
     // paramDecl = paramType ident
-    private Type paramDecl() {
+    private Symbol paramDecl() {
         Type t = paramType();
         Token ident = expectRetrieve(Token.Kind.IDENT);
-        tryDeclareVariable(ident, t);
-        return t;
+        return tryDeclareVariable(ident, t, false);
     }
 
     // assign = designator ( ( assignOp relExpr ) | unaryOp )
@@ -537,7 +731,6 @@ public class Compiler {
             Token assignOp = expectRetrieve(NonTerminal.ASSIGN_OP);
             Expression source = relExpr();
 
-            // TODO: FINISH ALL THE CASES
             switch (assignOp.kind()) {
                 case ADD_ASSIGN:
                     source = new Addition(assignOp.lineNumber(), assignOp.charPosition(), copy, source);
@@ -576,7 +769,6 @@ public class Compiler {
                 identType = ident.identifier().type();
             }
 
-            // TODO: UNARY OP EXPRESSIONS
             switch (unaryOp.kind()) {
                 case UNI_INC:
                     if (identType instanceof ArrayType) {
@@ -589,7 +781,7 @@ public class Compiler {
                                     new Addition(
                                             unaryOp.lineNumber(),
                                             unaryOp.charPosition(),
-                                            ident,
+                                            copy,
                                             new IntegerLiteral(unaryOp.lineNumber(), unaryOp.charPosition(), 1)));
                         }
                     } else {
@@ -614,7 +806,7 @@ public class Compiler {
                                     new Subtraction(
                                             unaryOp.lineNumber(),
                                             unaryOp.charPosition(),
-                                            ident,
+                                            copy,
                                             new IntegerLiteral(unaryOp.lineNumber(), unaryOp.charPosition(), 1)));
                         }
                     } else {
@@ -643,12 +835,12 @@ public class Compiler {
         Token start = expectRetrieve(Token.Kind.CALL);
         Token ident = expectRetrieve(Token.Kind.IDENT);
         List<Symbol> overloads = tryResolveVariable(ident, true);
+
         Token paramStart = expectRetrieve(Token.Kind.OPEN_PAREN);
 
         ArrayList<Expression> params = new ArrayList<Expression>();
 
         if (have(NonTerminal.REL_EXPR)) {
-            // TODO: Do something with these arguments?
             params.add(relExpr());
 
             while (accept(Token.Kind.COMMA)) {

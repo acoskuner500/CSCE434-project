@@ -219,6 +219,15 @@ public class TypeChecker implements NodeVisitor {
         if (prevResult instanceof ErrorType) {
             ErrorType err = (ErrorType) prevResult;
             reportError(node.lineNumber(), node.charPosition(), err.getMessage());
+        } else {
+            if (node.rightOperand() instanceof IntegerLiteral) {
+            IntegerLiteral divisor = (IntegerLiteral) node.rightOperand();
+
+            if (divisor.value() == 0) {
+                prevResult = new ErrorType("Cannot divide by 0.");
+                reportError(node.lineNumber(), node.charPosition(), ((ErrorType) prevResult).getMessage());
+            }
+        }
         }
     }
 
@@ -420,7 +429,32 @@ public class TypeChecker implements NodeVisitor {
     public void visit(StatementSequence node) {
         for (Statement s : node) {
             s.accept(this);
+        } 
+    }
+
+    private boolean hasReturns(StatementSequence node) {
+        // Check if every path results in a return
+        for (Statement stat : node) {
+            if (stat instanceof ReturnStatement) {
+                return true;
+            } else if (stat instanceof IfStatement) {
+                // Has to have return in THEN and ELSE
+                IfStatement ifStat = (IfStatement) stat;
+                if (ifStat.hasElse()) {
+                    if (hasReturns(ifStat.thenStatements()) && hasReturns(ifStat.elseStatements())) {
+                        return true;
+                    }
+                }
+            } else if (stat instanceof RepeatStatement) {
+                // Must have return on all paths in the repeat
+                RepeatStatement repeatStat = (RepeatStatement) stat;
+                if (hasReturns(repeatStat.repeatStatements())) {
+                    return true;
+                }
+            }
         }
+
+        return false;
     }
 
     @Override
@@ -446,6 +480,13 @@ public class TypeChecker implements NodeVisitor {
             node.variables().accept(this);
         }
         node.functionStatementSequence().accept(this);
+
+        // Check if all function paths have returns (if applicable)
+        FuncType funcType = (FuncType) currentFunction.type();
+        System.out.println(currentFunction);
+        if (!(funcType.returnType() instanceof VoidType) && !hasReturns(node.functionStatementSequence())) {
+            reportError(node.lineNumber(), node.charPosition(), "Not all paths in function " + currentFunction.name() + " return.");
+        }
     }
 
     @Override

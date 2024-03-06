@@ -68,9 +68,9 @@ public class CompilerTester {
                 System.err.println("reg num too large - setting to 24");
                 numRegs = 24;
             }
-            if (numRegs < 4) {
-                System.err.println("reg num too small - setting to 4");
-                numRegs = 4;
+            if (numRegs < 2) {
+                System.err.println("reg num too small - setting to 2");
+                numRegs = 2;
             }
         } catch (NumberFormatException e) {
             System.err.println("Error in option NumRegs -- reseting to 24 (default)");
@@ -157,38 +157,38 @@ public class CompilerTester {
             System.exit(-6);
         }
 
-        // //PA 8
-        // c.regAlloc(numRegs);
+        //PA 8
+        c.regAlloc(numRegs);
 
         // //PA 9
-        // int[] program = c.genCode();
-        // if (c.hasError()) {
-        //     System.err.println("Error compiling file");
-        //     System.err.println(c.errorReport());
-        //     System.exit(-4);
-        // }
+        int[] program = c.genCode();
+        if (c.hasError()) {
+            System.err.println("Error compiling file");
+            System.err.println(c.errorReport());
+            System.exit(-4);
+        }
 
-        // if (cmd.hasOption("asm")) {
+        if (cmd.hasOption("asm")) {
 
-        //     String asmFile = sourceFile.substring(0, sourceFile.lastIndexOf('.')) + "_asm.txt";
-        //     try (PrintStream out = new PrintStream(asmFile)) {
-        //         for (int i = 0; i < program.length; i++) {
-        //             out.print(i + ":\t" + DLX.instrString(program[i])); // \newline included in DLX.instrString()
-        //         }
-        //     } catch (IOException e) {
-        //         System.err.println("Error accessing the asm file: \"" + asmFile + "\"");
-        //         System.exit(-5);
-        //     }
-        // }
+            String asmFile = sourceFile.substring(0, sourceFile.lastIndexOf('.')) + "_asm.txt";
+            try (PrintStream out = new PrintStream(asmFile)) {
+                for (int i = 0; i < program.length; i++) {
+                    out.print(i + ":\t" + DLX.instrString(program[i])); // \newline included in DLX.instrString()
+                }
+            } catch (IOException e) {
+                System.err.println("Error accessing the asm file: \"" + asmFile + "\"");
+                System.exit(-5);
+            }
+        }
 
-        // DLX.load(program);
-        // try {
-        //     DLX.execute(in);
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        //     System.err.println("IOException inside DLX");
-        //     System.exit(-6);
-        // }
+        DLX.load(program);
+        try {
+            DLX.execute(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("IOException inside DLX");
+            System.exit(-6);
+        }
 
 
     }

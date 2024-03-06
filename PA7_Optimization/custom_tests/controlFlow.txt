@@ -1,0 +1,31 @@
+main
+
+int a, b, c;
+
+{
+    a = 1;
+    b = 2;
+    c = 3;
+
+    if (a < b) then
+        if (b + c > a) then
+            call printInt(a);
+            call printInt(b);
+            call printInt(c);
+
+            if (a != c) then
+                call printInt(a);
+            fi;
+        else
+            a = b + c;
+            call printInt(a);
+
+            if (b < c) then
+                call printInt(b);
+            fi;
+        fi;
+    fi;
+
+    b = c + a;
+    call printInt(b);
+}.

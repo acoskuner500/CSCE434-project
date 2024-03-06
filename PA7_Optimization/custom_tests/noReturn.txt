@@ -1,0 +1,25 @@
+main
+
+int i, j, k;
+
+function add(int a, int b): int {
+    if (a < j) then
+        repeat
+            i = 3;
+            i++;
+            j--;
+            return a;
+            a = a - 2;
+        until (i == j);
+    fi;
+
+    return b;
+};
+
+{
+    i = 1;
+    j = 2; 
+    k = 3;
+
+    call add(1, 2);
+}.

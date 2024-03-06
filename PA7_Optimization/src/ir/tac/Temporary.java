@@ -14,9 +14,4 @@ public class Temporary extends Variable {
     public int definition() {
         return instr;
     }
-
-    @Override
-    public String toString() {
-        return "(" + instr + ")";
-    }
 }

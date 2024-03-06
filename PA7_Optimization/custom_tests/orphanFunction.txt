@@ -1,0 +1,20 @@
+main
+
+int i, j, k;
+
+function a(): void {
+   call b(); 
+   call printInt(i);
+};
+
+function b(): void {
+    call printInt(j);
+};
+
+{
+    i = 4;
+    j = 7;
+    k = 3;
+
+    call printInt(k);
+}.

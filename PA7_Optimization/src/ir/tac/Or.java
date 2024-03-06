@@ -6,13 +6,22 @@ public class Or extends Assign {
         super(id, dest, left, right);
     }
 
+    public Or(Or other) {
+        super(other);
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Or");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return getString("OR");
+        return getString("or");
+    }
+
+    @Override
+    public TAC clone() {
+        return new Or(this);
     }
 }

@@ -14,6 +14,18 @@ public class Variable implements Value {
         return sym;
     }
 
+    public boolean isGlobal() {
+        return sym.isGlobalVariable();
+    }
+
+    public boolean isParameter() {
+        return sym.isParameter();
+    }
+
+    public boolean isLocal() {
+        return sym.isLocal();
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
         throw new UnsupportedOperationException("Unimplemented method 'accept' for Variable");
@@ -22,5 +34,20 @@ public class Variable implements Value {
     @Override
     public String toString() {
         return sym.name();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Variable) {
+            Variable other = (Variable) o;
+            return this.sym == other.sym;
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return sym.hashCode();
     }
 }

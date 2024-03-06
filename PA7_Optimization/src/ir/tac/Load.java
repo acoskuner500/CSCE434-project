@@ -11,13 +11,36 @@ public class Load extends TAC {
         this.loc = loc;
     }
 
+    public Load(Load other) {
+        super(other);
+        this.dest = other.dest;
+        this.loc = other.loc;
+    }
+
+    public Variable destination() {
+        return dest;
+    }
+
+    public Variable location() {
+        return loc;
+    }
+
+    public void setDestination(Variable dest) {
+        this.dest = dest;
+    }
+
     @Override
     public void accept(TACVisitor visitor) {
-        throw new UnsupportedOperationException("Unimplemented method 'accept' for Load");
+        visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        return super.getID() + " : LOAD " + loc;
+        return (super.isEliminated() ? "eliminated-" : "") + super.getID() + " : " + dest + " := LOAD " + loc;
+    }
+
+    @Override
+    public TAC clone() {
+        return new Load(this);
     }
 }

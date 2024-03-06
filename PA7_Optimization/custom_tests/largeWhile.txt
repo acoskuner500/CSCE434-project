@@ -1,0 +1,20 @@
+main
+int x, y, z;
+{
+    x = 4;
+    y = 7;
+    z = 9;
+
+    while (x < y) do
+        z++;
+        y = z - x;
+
+        while (z < 10) do
+            if ((x < y) and (z > y)) then
+                x++;
+            else
+                y--;
+            fi;
+        od;
+    od;
+}.
